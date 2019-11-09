@@ -3,15 +3,13 @@
 #include<GL/glew.h>
 //GLFW
 #include<GLFW/glfw3.h>
+//SOIL2
+#include<SOIL2/SOIL2.h>
+
 #include"Shader.h"
 
 //Window dimensions
 const GLint WIDHT = 800, HEIGHT = 600;
-
-// Shaders
-
-
-
 
 
 //the main function, game loop is inside
@@ -56,28 +54,73 @@ int main()
 	//define viewport dimensions
 	glViewport(0,0, screenWidth, screenHeight);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	Shader ourShader("core.vs","core.fs");
 
 	// Set up vertex data (and buffer(s)) and attribute pointers
 
 	GLfloat vertices[] =
-	{	//position							//color
-		-0.5f, -0.5f, 0.0f,			1.0f, 0.0f, 0.0f,// Left  red
-		0.5f, -0.5f, 0.0f,			0.0f, 0.0f, 1.0f,// Right blue
-		0.0f,  0.5f, 0.0f,			0.0f, 1.0f, 0.0f // Top green
+	{	//position							//color								//Texture Coordinates
+		0.5f, 0.5f, 0.0f,						1.0f, 0.0f, 0.0f,						1.0f, 1.0f,
+		0.5f, -0.5f, 0.0f,						0.0f, 1.0f, 0.0f,						1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,						0.0f, 0.0f, 1.0f,						0.0f, 0.0f,
+		-0.5f, 0.5f, 0.0f,						1.0f,1.0f,0.0f,							0.0f, 1.0f
 	};
 
-	GLuint VAO, VBO;
+	GLuint indices[] =
+	{
+		0,1,3, //first triangle
+		1,2,3 //second triangle
+
+	};
+
+	GLuint VAO, VBO, EBO;
+	glGenBuffers(1,&EBO);
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
+
+	//bind vertex array object fisrt
 	glBindVertexArray(VAO);
+
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices),vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)0);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	//position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
+	//texture coordinate attribute 
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+	//
+
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs)
+
+
+	GLuint texture;
+
+	int width, height;
+
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	unsigned char *image = SOIL_load_image("images/som.png", &width, &height, 0, SOIL_LOAD_RGBA  );
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -94,8 +137,13 @@ int main()
 		// Draw our first triangle
 
 		ourShader.Use();
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture"), 0);
+
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		// Swap the screen buffers
@@ -109,6 +157,7 @@ int main()
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	// Terminate GLFW, clearing any resources allocated by GLFW.
 
 	glfwTerminate();
