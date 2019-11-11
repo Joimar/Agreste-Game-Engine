@@ -35,7 +35,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr);
+	GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "Agreste Game Engine", nullptr, nullptr);
 
 	int screenWidth, screenHeight;
 	glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
@@ -147,7 +147,7 @@ int main()
 		ourShader.Use();
 
 		// Create transformations
-		glm::mat4 transform;
+		glm::mat4 transform(1);
 		transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
 		transform = glm::rotate(transform, (GLfloat)glfwGetTime() * (-5.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 

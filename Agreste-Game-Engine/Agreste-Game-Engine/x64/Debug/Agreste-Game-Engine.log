@@ -1,7 +1,2 @@
 ﻿  source.cpp
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-soil2-debug.lib(etc1_utils.obj) : warning LNK4099: PDB 'soil2-debug.pdb' was not found with 'soil2-debug.lib(etc1_utils.obj)' or at 'C:\Users\Joimar\Desktop\TCC\Agreste-Game-Engine\Agreste-Game-Engine\x64\Debug\soil2-debug.pdb'; linking object as if no debug info
-soil2-debug.lib(image_DXT.obj) : warning LNK4099: PDB 'soil2-debug.pdb' was not found with 'soil2-debug.lib(image_DXT.obj)' or at 'C:\Users\Joimar\Desktop\TCC\Agreste-Game-Engine\Agreste-Game-Engine\x64\Debug\soil2-debug.pdb'; linking object as if no debug info
-soil2-debug.lib(image_helper.obj) : warning LNK4099: PDB 'soil2-debug.pdb' was not found with 'soil2-debug.lib(image_helper.obj)' or at 'C:\Users\Joimar\Desktop\TCC\Agreste-Game-Engine\Agreste-Game-Engine\x64\Debug\soil2-debug.pdb'; linking object as if no debug info
-soil2-debug.lib(SOIL2.obj) : warning LNK4099: PDB 'soil2-debug.pdb' was not found with 'soil2-debug.lib(SOIL2.obj)' or at 'C:\Users\Joimar\Desktop\TCC\Agreste-Game-Engine\Agreste-Game-Engine\x64\Debug\soil2-debug.pdb'; linking object as if no debug info
-  Agreste-Game-Engine.vcxproj -> C:\Users\Joimar\Desktop\TCC\Agreste-Game-Engine\Agreste-Game-Engine\x64\Debug\Agreste-Game-Engine.exe
+  Agreste-Game-Engine.vcxproj -> C:\Users\Home\Documents\Agreste-Game-Engine\Agreste-Game-Engine\x64\Debug\Agreste-Game-Engine.exe
