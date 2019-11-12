@@ -202,13 +202,13 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// Load, create texture and generate mipmaps
 	int width, height;
-	unsigned char *image = SOIL_load_image("images/zebra.jpg", &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char *image = SOIL_load_image("images/Nick.png", &width, &height, 0, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
 
-	glm::mat4 projection;
+	glm::mat4 projection(1);
 	projection = glm::perspective(45.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);
 	//projection =   glm::ortho(0.0f, ( GLfloat )screenWidth, 0.0f, ( GLfloat )screenHeight, 0.1f, 1000.0f);
 
@@ -233,8 +233,8 @@ int main()
 		ourShader.Use();
 
 		// Create transformations
-		glm::mat4 model;
-		glm::mat4 view;
+		glm::mat4 model(1);
+		glm::mat4 view(1);
 		model = glm::rotate(model, (GLfloat)glfwGetTime() * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f)); // use with perspective projection
 		//model = glm::rotate( model, 0.5f, glm::vec3( 1.0f, 0.0f, 0.0f ) ); // use to compare orthographic and perspective projection
 		//view = glm::translate( view, glm::vec3( screenWidth / 2, screenHeight / 2, -700.0f ) ); // use with orthographic projection
