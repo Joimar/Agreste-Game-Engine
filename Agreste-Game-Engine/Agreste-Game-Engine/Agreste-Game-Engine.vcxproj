@@ -123,8 +123,10 @@
     <ClCompile Include="source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="core.fs" />
-    <None Include="core.vs" />
+    <None Include="lamp.fs" />
+    <None Include="lamp.vs" />
+    <None Include="lighting.fs" />
+    <None Include="lighting.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />

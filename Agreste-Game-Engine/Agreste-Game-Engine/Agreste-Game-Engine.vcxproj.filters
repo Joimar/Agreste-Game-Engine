@@ -26,10 +26,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="core.vs">
+    <None Include="lighting.fs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="core.fs">
+    <None Include="lighting.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="lamp.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="lamp.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
