@@ -4,7 +4,7 @@
 #include <vector>
 
 // GL Includes
-//#define GLEW_STATIC
+
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
@@ -25,7 +25,6 @@ const GLfloat PITCH = 0.0f;
 const GLfloat SPEED = 6.0f;
 const GLfloat SENSITIVTY = 0.25f;
 const GLfloat ZOOM = 45.0f;
-
 
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera
@@ -113,12 +112,17 @@ public:
 	// Processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 	void ProcessMouseScroll(GLfloat yOffset)
 	{
-		
+
 	}
 
 	GLfloat GetZoom()
 	{
 		return this->zoom;
+	}
+
+	glm::vec3 GetPosition()
+	{
+		return this->position;
 	}
 
 private:
