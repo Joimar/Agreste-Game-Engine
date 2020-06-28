@@ -51,5 +51,11 @@
     <Image Include="images\som.png">
       <Filter>images</Filter>
     </Image>
+    <Image Include="images\container2.png">
+      <Filter>images</Filter>
+    </Image>
+    <Image Include="images\container2_specular.png">
+      <Filter>images</Filter>
+    </Image>
   </ItemGroup>
 </Project>
