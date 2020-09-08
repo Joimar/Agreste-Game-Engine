@@ -85,10 +85,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/Dependencies/Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)/Dependencies/libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glew32d.lib;glew32sd.lib;glfw3.lib;glfw3dll.lib;OpenGL32.lib;soil2-debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -120,17 +122,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="objloader.cpp" />
+    <ClCompile Include="shader.cpp" />
     <ClCompile Include="source.cpp" />
+    <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lamp.fs" />
     <None Include="lamp.vs" />
     <None Include="lighting.fs" />
     <None Include="lighting.vs" />
+    <None Include="TextureFragmentShader.fragmentshader" />
+    <None Include="TransformVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="objloader.hpp" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="shader.hpp" />
+    <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\container2.png" />
