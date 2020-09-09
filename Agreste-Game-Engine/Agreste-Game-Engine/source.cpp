@@ -121,7 +121,7 @@ int main()
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals; // Won't be used at the moment.
-	bool res = loadOBJ("cube.obj", vertices, uvs, normals);
+	bool res = loadOBJ("nanosuit.obj", vertices, uvs, normals);
 
 	// Load it into a VBO
 
@@ -137,7 +137,9 @@ int main()
 
 	
 
-	
+	glm::mat4 projection(1);
+	projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
+
 
 	
 	// Game loop
@@ -152,21 +154,60 @@ int main()
 		glfwPollEvents();
 		DoMovement();
 
+		//load the shader
+		glUseProgram(programID);
+
+		//create model matrix
+		glm::mat4 model = glm::mat4(1.0);
+		glm::mat4 view(1);
+		view = camera.GetViewMatrix();
+		glm::mat4 MVP = projection * view * model;
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		// Bind our texture in Texture Unit 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+		// Set our "myTextureSampler" sampler to use Texture Unit 0
+		glUniform1i(TextureID, 0);
 
-		// Use cooresponding shader when setting uniforms/drawing objects
-		
-		// Create camera transformations
-		glm::mat4 view(1);
-		view = camera.GetViewMatrix();
+		// 1rst attribute buffer : vertices
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+		glVertexAttribPointer(
+			0,                  // attribute
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
 
-		
-		
+		// 2nd attribute buffer : UVs
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+		glVertexAttribPointer(
+			1,                                // attribute
+			2,                                // size
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
 
+		// Draw the triangle !
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+
+		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+
+		// Swap buffers
 		glfwSwapBuffers(window);
+		glfwPollEvents();
+		
 	}
 
 	
