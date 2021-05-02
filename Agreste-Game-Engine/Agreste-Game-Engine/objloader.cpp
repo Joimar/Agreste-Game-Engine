@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <string>
 #include <cstring>
-
 #include <glm/glm.hpp>
-
+#include<iostream>
 #include "objloader.hpp"
 
 
@@ -134,9 +133,10 @@ bool loadAssImp(
 
 	Assimp::Importer importer;
 
-	const aiScene* scene = importer.ReadFile(path, 0/*aiProcess_JoinIdenticalVertices | aiProcess_SortByPType*/);
+	const aiScene* scene = importer.ReadFile(path,0/* aiProcess_JoinIdenticalVertices | aiProcess_SortByPType*/);
 	if (!scene) {
 		fprintf(stderr, importer.GetErrorString());
+		std::cout << importer.GetErrorString();
 		getchar();
 		return false;
 	}

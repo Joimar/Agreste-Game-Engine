@@ -123,7 +123,7 @@ int main()
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals; // Won't be used at the moment.
 	//bool res = loadOBJ("nanosuit.obj", vertices, uvs, normals);
-	bool res = loadAssImp("teste.obj", indices, vertices, uvs, normals);
+	bool res = loadAssImp("nanosuit.obj", indices, vertices, uvs, normals);
 
 	// Load it into a VBO
 
@@ -169,13 +169,7 @@ int main()
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Bind our texture in Texture Unit 0
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Texture);
-		// Set our "myTextureSampler" sampler to use Texture Unit 0
-		glUniform1i(TextureID, 0);
-
+		
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -187,7 +181,7 @@ int main()
 			0,                  // stride
 			(void*)0            // array buffer offset
 		);
-
+		
 		// 2nd attribute buffer : UVs
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
