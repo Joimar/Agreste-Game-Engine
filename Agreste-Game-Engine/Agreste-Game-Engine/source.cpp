@@ -118,10 +118,12 @@ int main()
 	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
 
 	// Read our .obj file
+	std::vector <unsigned short> indices;
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> uvs;
 	std::vector<glm::vec3> normals; // Won't be used at the moment.
-	bool res = loadOBJ("nanosuit.obj", vertices, uvs, normals);
+	//bool res = loadOBJ("nanosuit.obj", vertices, uvs, normals);
+	bool res = loadAssImp("teste.obj", indices, vertices, uvs, normals);
 
 	// Load it into a VBO
 
