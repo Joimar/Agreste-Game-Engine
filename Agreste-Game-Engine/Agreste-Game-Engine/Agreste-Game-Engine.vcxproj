@@ -127,9 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="objloader.cpp" />
-    <ClCompile Include="shader.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="shader2.cpp" />
     <ClCompile Include="source.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
@@ -138,12 +141,15 @@
     <None Include="lamp.vs" />
     <None Include="lighting.fs" />
     <None Include="lighting.vs" />
+    <None Include="model_loading.fs" />
+    <None Include="model_loading.vs" />
     <None Include="TextureFragmentShader.fragmentshader" />
     <None Include="TransformVertexShader.vertexshader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="objloader.hpp" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="shader.hpp" />

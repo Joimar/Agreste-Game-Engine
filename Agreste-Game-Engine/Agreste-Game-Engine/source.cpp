@@ -22,6 +22,8 @@
 #include "objloader.hpp"
 #include "texture.hpp"
 #include "Camera.h"
+#include "Mesh.h"
+#include "Model.h"
 
 
 // Function prototypes
@@ -41,7 +43,7 @@ bool keys[1024];
 bool firstMouse = true;
 
 // Light attributes
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+//glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -90,57 +92,60 @@ int main()
 		return EXIT_FAILURE;
 	}
 
+	
+
 	// Define the viewport dimensions
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// OpenGL options
 	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS);
+	//glDepthFunc(GL_LESS);
 
 	// Cull triangles which normal is not towards the camera
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
+	Shader ourShader("model_loading.vs", "model_loading.fs");
+	Model ourModel("../Agreste-Game-Engine/teste.obj");
+	//GLuint VertexArrayID;
+	//glGenVertexArrays(1, &VertexArrayID);
+	//glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders("TransformVertexShader.vertexshader", "TextureFragmentShader.fragmentshader");
+	//GLuint programID = LoadShaders("model_loading.vs", "model_loading.fs");
 
 	// Get a handle for our "MVP" uniform
-	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+	//GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 	// Load the texture
-	GLuint Texture = loadDDS("uvmap.DDS");
+	//GLuint Texture = loadDDS("uvmap.DDS");
 
 	// Get a handle for our "myTextureSampler" uniform
-	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
+	//GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
 
 	// Read our .obj file
-	std::vector <unsigned short> indices;
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals; // Won't be used at the moment.
+	//std::vector <unsigned short> indices;
+	//std::vector<glm::vec3> vertices;
+	//std::vector<glm::vec2> uvs;
+	//std::vector<glm::vec3> normals; // Won't be used at the moment.
 	//bool res = loadOBJ("nanosuit.obj", vertices, uvs, normals);
-	bool res = loadAssImp("nanosuit.obj", indices, vertices, uvs, normals);
+	//bool res = loadAssImp("nanosuit.obj", indices, vertices, uvs, normals);
 
 	// Load it into a VBO
 
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+	//GLuint vertexbuffer;
+	//glGenBuffers(1, &vertexbuffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	//glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 
-	GLuint uvbuffer;
-	glGenBuffers(1, &uvbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+	//GLuint uvbuffer;
+	//glGenBuffers(1, &uvbuffer);
+	//glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+	//glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
 	
 
-	glm::mat4 projection(1);
-	projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
+	
 
 
 	
@@ -157,17 +162,31 @@ int main()
 		DoMovement();
 
 		//load the shader
-		glUseProgram(programID);
+		ourShader.Use();
+		glClearColor(0.0, 0.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//create model matrix
-		glm::mat4 model = glm::mat4(1.0);
-		glm::mat4 view(1);
-		view = camera.GetViewMatrix();
-		glm::mat4 MVP = projection * view * model;
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		//glm::mat4 model = glm::mat4(1.0);
+		//glm::mat4 view(1);
+		//view = camera.GetViewMatrix();
+		//glm::mat4 MVP = projection * view * model;
+		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+		glm::mat4 projection(1);
+		projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		ourShader.setMat4("projection", projection);
+		ourShader.setMat4("view", view);
+
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		ourShader.setMat4("model", model);
+		ourModel.Draw(ourShader);
 
 		// Clear the colorbuffer
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		/*glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		// 1rst attribute buffer : vertices
@@ -198,7 +217,7 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
 		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(1);*/
 
 		// Swap buffers
 		glfwSwapBuffers(window);

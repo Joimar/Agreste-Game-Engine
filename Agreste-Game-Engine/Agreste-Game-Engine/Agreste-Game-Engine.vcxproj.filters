@@ -26,10 +26,19 @@
     <ClCompile Include="texture.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
-    <ClCompile Include="shader.cpp">
+    <ClCompile Include="Mesh.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
+    <ClCompile Include="Model.cpp">
+      <Filter>Arquivos de Recurso</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Arquivos de Recurso</Filter>
+    </ClCompile>
+    <ClCompile Include="shader2.cpp">
+      <Filter>Arquivos de Recurso</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
   </ItemGroup>
@@ -52,6 +61,12 @@
     <None Include="TransformVertexShader.vertexshader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="model_loading.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="model_loading.fs">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -70,6 +85,9 @@
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>
