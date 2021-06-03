@@ -3,11 +3,9 @@
 #include "Shader.h"
 #include "Model.h"
 #include "GameBoard.h"
-#include "Cubemap.h"
 
 using namespace std;
 
-class Cubemap;
 class GameBoard;
 
 class GameObject
@@ -19,6 +17,8 @@ private:
 	glm::vec3 velocity;
 	bool fixed;
 	bool tangible;
+	bool stencilMode;
+	glm::vec4 rawColor;
 
 public:
 	GameObject(string const & objPath, const GLchar *vertexShaderPath = "model_loading.vs", const GLchar *fragmentShaderPath = "model_loading.fs");
@@ -28,5 +28,15 @@ public:
 	glm::vec3 getVelocity();
 	void setVelocity(glm::vec3 velocity);
 	Shader getShader();
+	bool isFixed();
+	void fix();
+	void unfix();
+	bool isTangible();
+	void setTangibility(bool value);
+	bool isStencilMode();
+	void setStencilMode(bool mode);
+	glm::vec4 getRawColor();
+	void setRawColor(glm::vec4 color);
+	void drawStencil( GameBoard & board);
 };
 

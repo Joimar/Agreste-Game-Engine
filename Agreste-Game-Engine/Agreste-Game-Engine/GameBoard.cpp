@@ -38,7 +38,15 @@ void GameBoard::drawGameObjects()
 	{
 		for (size_t i = 0; i < this->gameObjects.size(); i++)
 		{
-			this->gameObjects[i].draw(*this);
+			if (!this->gameObjects[i].isStencilMode()) 
+			{
+				this->gameObjects[i].draw(*this);
+			}
+			else 
+			{
+				this->gameObjects[i].drawStencil(*this);
+			}
+			
 		}
 	}
 	this->skyCube.draw(glm::mat4(glm::mat3(this->getCamera().GetViewMatrix())), this->getProjection());
@@ -87,6 +95,22 @@ void GameBoard::setCamera(Camera cam)
 Cubemap GameBoard::getSkyCube()
 {
 	return this->skyCube;
+}
+
+void GameBoard::setSkyCube(string path)
+{
+	Cubemap newCube(path);
+	this->skyCube = newCube;
+}
+
+float GameBoard::getScreenWidth()
+{
+	return this->ScreenWidth;
+}
+
+float GameBoard::getScreenHeight()
+{
+	return this->ScreenHeight;
 }
 
 void GameBoard::addGameObject(string const & objPath, const GLchar * vertexShaderPath, const GLchar * fragmentShaderPath)

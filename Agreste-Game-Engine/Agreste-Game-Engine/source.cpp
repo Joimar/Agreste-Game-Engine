@@ -37,7 +37,6 @@ GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
 bool firstMouse = true;
 
-
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
@@ -91,7 +90,7 @@ int main()
 	board.addGameObject("../Agreste-Game-Engine/Backpack.obj");
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
 	board.gameObjects[1].setPosition(glm::vec3(3.0f, 3.0f, -3.0f));
-	
+	board.gameObjects[1].setRawColor(glm::vec4(0.3f, 0.8f, 0.234f, 1.0f));
 
 	
 
@@ -102,10 +101,6 @@ int main()
 		GLfloat currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-		board.setView(view);
-		board.setProjection(projection);
 		board.setCamera(camera);
 		board.drawGameObjects();
 		

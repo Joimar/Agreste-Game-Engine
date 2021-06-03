@@ -33,6 +33,9 @@ public:
 	Camera getCamera();
 	void setCamera(Camera cam);
 	Cubemap getSkyCube();
+	void setSkyCube(string path);
+	float getScreenWidth();
+	float getScreenHeight();
 	void addGameObject(string const & objPath, const GLchar *vertexShaderPath = "model_loading.vs", const GLchar *fragmentShaderPath = "model_loading.fs");
 
 };
