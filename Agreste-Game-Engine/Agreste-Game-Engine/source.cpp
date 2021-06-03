@@ -2,15 +2,12 @@
 #include <cmath>
 
 // GLEW
-
 #include <GL/glew.h>
 
 // GLFW
 #include <GLFW/glfw3.h>
-
 // Other Libs
 #include "SOIL2/SOIL2.h"
-
 // GLM Mathematics
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,12 +15,9 @@
 
 // Other includes
 #include "Shader.h"
-#include "shader.hpp"
-#include "objloader.hpp"
-#include "texture.hpp"
-#include "Camera.h"
-#include "Mesh.h"
-#include "Model.h"
+#include "GameObject.h"
+#include "GameBoard.h"
+
 
 
 // Function prototypes
@@ -35,15 +29,14 @@ void DoMovement();
 const GLuint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
+
 // Camera
-Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.3f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
 bool firstMouse = true;
 
-// Light attributes
-//glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -91,64 +84,17 @@ int main()
 		std::cout << "Failed to initialize GLEW" << std::endl;
 		return EXIT_FAILURE;
 	}
-
-	
-
 	// Define the viewport dimensions
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	// OpenGL options
-	glEnable(GL_DEPTH_TEST);
-	// Accept fragment if it closer to the camera than the former one
-	//glDepthFunc(GL_LESS);
-
-	// Cull triangles which normal is not towards the camera
-	//glEnable(GL_CULL_FACE);
-
-	Shader ourShader("model_loading.vs", "model_loading.fs");
-	Model ourModel("../Agreste-Game-Engine/teste.obj");
-	//GLuint VertexArrayID;
-	//glGenVertexArrays(1, &VertexArrayID);
-	//glBindVertexArray(VertexArrayID);
-
-	// Create and compile our GLSL program from the shaders
-	//GLuint programID = LoadShaders("model_loading.vs", "model_loading.fs");
-
-	// Get a handle for our "MVP" uniform
-	//GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-
-	// Load the texture
-	//GLuint Texture = loadDDS("uvmap.DDS");
-
-	// Get a handle for our "myTextureSampler" uniform
-	//GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
-
-	// Read our .obj file
-	//std::vector <unsigned short> indices;
-	//std::vector<glm::vec3> vertices;
-	//std::vector<glm::vec2> uvs;
-	//std::vector<glm::vec3> normals; // Won't be used at the moment.
-	//bool res = loadOBJ("nanosuit.obj", vertices, uvs, normals);
-	//bool res = loadAssImp("nanosuit.obj", indices, vertices, uvs, normals);
-
-	// Load it into a VBO
-
-	//GLuint vertexbuffer;
-	//glGenBuffers(1, &vertexbuffer);
-	//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	//glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
-	//GLuint uvbuffer;
-	//glGenBuffers(1, &uvbuffer);
-	//glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-	//glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-
+	
+	GameBoard board(SCREEN_WIDTH, SCREEN_HEIGHT);
+	board.addGameObject("../Agreste-Game-Engine/Backpack.obj");
+	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
+	board.gameObjects[1].setPosition(glm::vec3(3.0f, 3.0f, -3.0f));
 	
 
 	
 
-
-	
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -156,70 +102,20 @@ int main()
 		GLfloat currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-
+		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection = glm::perspective(glm::radians(camera.GetZoom()), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+		board.setView(view);
+		board.setProjection(projection);
+		board.setCamera(camera);
+		board.drawGameObjects();
+		
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		DoMovement();
 
-		//load the shader
-		ourShader.Use();
-		glClearColor(0.0, 0.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		//create model matrix
-		//glm::mat4 model = glm::mat4(1.0);
-		//glm::mat4 view(1);
-		//view = camera.GetViewMatrix();
-		//glm::mat4 MVP = projection * view * model;
-		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-		glm::mat4 projection(1);
-		projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix();
-		ourShader.setMat4("projection", projection);
-		ourShader.setMat4("view", view);
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-		ourShader.setMat4("model", model);
-		ourModel.Draw(ourShader);
-
-		// Clear the colorbuffer
-		/*glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
-			0,                  // attribute
-			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
-			0,                  // stride
-			(void*)0            // array buffer offset
-		);
 		
-		// 2nd attribute buffer : UVs
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-		glVertexAttribPointer(
-			1,                                // attribute
-			2,                                // size
-			GL_FLOAT,                         // type
-			GL_FALSE,                         // normalized?
-			0,                                // stride
-			(void*)0                          // array buffer offset
-		);
 
-		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);*/
-
-		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		
@@ -296,3 +192,4 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 
 	camera.ProcessMouseMovement(xOffset, yOffset);
 }
+

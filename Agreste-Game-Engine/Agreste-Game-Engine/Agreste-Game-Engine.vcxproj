@@ -128,13 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cubemap.cpp" />
+    <ClCompile Include="GameBoard.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="objloader.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="shader2.cpp" />
     <ClCompile Include="source.cpp" />
-    <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lamp.fs" />
@@ -143,17 +143,19 @@
     <None Include="lighting.vs" />
     <None Include="model_loading.fs" />
     <None Include="model_loading.vs" />
-    <None Include="TextureFragmentShader.fragmentshader" />
-    <None Include="TransformVertexShader.vertexshader" />
+    <None Include="skybox.fs" />
+    <None Include="skybox.vs" />
+    <None Include="stencil.fs" />
+    <None Include="stencil.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cubemap.h" />
+    <ClInclude Include="GameBoard.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="objloader.hpp" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="shader.hpp" />
-    <ClInclude Include="texture.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\container2.png" />

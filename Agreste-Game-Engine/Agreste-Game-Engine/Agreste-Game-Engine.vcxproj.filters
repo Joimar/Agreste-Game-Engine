@@ -20,12 +20,6 @@
     <ClCompile Include="source.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
-    <ClCompile Include="objloader.cpp">
-      <Filter>Arquivos de Recurso</Filter>
-    </ClCompile>
-    <ClCompile Include="texture.cpp">
-      <Filter>Arquivos de Recurso</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
@@ -35,10 +29,16 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
-    <ClCompile Include="shader2.cpp">
+    <ClCompile Include="Shader.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="Cubemap.cpp">
+      <Filter>Arquivos de Recurso</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Arquivos de Recurso</Filter>
+    </ClCompile>
+    <ClCompile Include="GameBoard.cpp">
       <Filter>Arquivos de Recurso</Filter>
     </ClCompile>
   </ItemGroup>
@@ -55,16 +55,22 @@
     <None Include="lamp.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="TextureFragmentShader.fragmentshader">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="TransformVertexShader.vertexshader">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="model_loading.vs">
       <Filter>Shaders</Filter>
     </None>
     <None Include="model_loading.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="stencil.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="skybox.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="skybox.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="stencil.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
@@ -75,19 +81,19 @@
     <ClInclude Include="Camera.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="objloader.hpp">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="texture.hpp">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
-    <ClInclude Include="shader.hpp">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="Cubemap.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
+    <ClInclude Include="GameBoard.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>

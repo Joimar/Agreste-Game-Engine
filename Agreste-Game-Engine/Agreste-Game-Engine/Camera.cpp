@@ -93,6 +93,21 @@ glm::vec3 Camera::GetFront()
 	return this->front;
 }
 
+void Camera::setPosition(glm::vec3 position)
+{
+	this->position = position;
+}
+
+void Camera::setFront(glm::vec3 front)
+{
+	
+	this->yaw = (glm::angle(glm::vec3(this->front.x, this->front.y, 0.0f), glm::vec3(front.x, front.y, 0.f))) * 57, 2958;
+	this->front = glm::normalize(front);
+	// Also re-calculate the Right and Up vector
+	this->right = glm::normalize(glm::cross(this->front, this->worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	this->up = glm::normalize(glm::cross(this->right, this->front));
+}
+
 void Camera::updateCameraVectors()
 {
 	// Calculate the new Front vector

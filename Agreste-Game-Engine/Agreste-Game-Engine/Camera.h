@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
+#include<glm/gtx/vector_angle.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -55,6 +56,10 @@ public:
 	glm::vec3 GetPosition();
 	
 	glm::vec3 GetFront();
+
+	void setPosition(glm::vec3 position);
+
+	void setFront(glm::vec3 front);
 
 private:
 	// Camera Attributes
