@@ -18,12 +18,15 @@
 #include "GameObject.h"
 #include "GameBoard.h"
 
-
+#define threshold  0.5
 
 // Function prototypes
 void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow *window, double xPos, double yPos);
+void joystick_callback(int jid, int event);
 void DoMovement();
+void joyPadTest(bool test);
+void movePlayer(glm::vec3 &pos);
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -31,11 +34,13 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 0.3f));
+Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
 bool firstMouse = true;
+int count1;
+
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -71,7 +76,10 @@ int main()
 	// Set the required callback functions
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, MouseCallback);
+	glfwSetJoystickCallback(joystick_callback);
 
+		
+	
 	// GLFW Options
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -87,13 +95,14 @@ int main()
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	
 	GameBoard board(SCREEN_WIDTH, SCREEN_HEIGHT);
-	board.addGameObject("../Agreste-Game-Engine/Backpack.obj");
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
-	board.gameObjects[1].setPosition(glm::vec3(3.0f, 3.0f, -3.0f));
-	board.gameObjects[1].setRawColor(glm::vec4(0.3f, 0.8f, 0.234f, 1.0f));
+	board.gameObjects[0].setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+	board.gameObjects[0].unfix();
 
-	
+	camera.setBehind(board.gameObjects[0].getPosition());
 
+	glm::vec3 gravity(0.0f, -0.01f, 0.0);
+	glm::vec3 movementBox(0.0f, 0.0f, 0.0f);
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -101,16 +110,29 @@ int main()
 		GLfloat currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		board.setCamera(camera);
-		board.drawGameObjects();
+
+		movementBox = glm::vec3(0);
 		
+		
+		for (size_t i = 0; i < board.gameObjects.size(); i++)
+		{
+			if (!board.gameObjects[i].isFixed() && board.gameObjects[i].getPosition().y>0)
+			{
+				board.gameObjects[i].setPosition(board.gameObjects[i].getPosition() + gravity);
+			}
+		}
+		board.setCamera(camera);
+		board.drawGameObjects();//se não tiver game objects ele desenha o skybox sozinho
+		glm::vec3 aux(0.0f, 3.0f, 3.5f);
+
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
-		DoMovement();
-
+		movePlayer(movementBox);
+		board.gameObjects[0].setPosition(board.gameObjects[0].getPosition() + movementBox);
+		//DoMovement();
+		joyPadTest(false);
+	
 		
-		
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		
@@ -188,3 +210,122 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 	camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
+void joyPadTest(bool test) 
+{
+	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
+	if (1==present)
+	{
+		int axisCount;
+		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
+		int buttonCount;
+		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+		if (test == true)
+		{
+			cout << "Left Stick X Axis:" << axes[0] << endl;
+			cout << "Left Stick Y Axis:" << axes[1] << endl;
+			cout << "Right Stick X Axis:" << axes[2] << endl;
+			cout << "Right Stick Y Axis:" << axes[3] << endl;
+			cout << "Left Trigger Axis:" << axes[4] << endl;
+			cout << "Right Trigger Axis:" << axes[5] << endl;
+
+			if (GLFW_PRESS == buttons[0])
+			{
+				cout << "A Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[1])
+			{
+				cout << "B Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[2])
+			{
+				cout << "X Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[3])
+			{
+				cout << "Y Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[4])
+			{
+				cout << "LB Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[5])
+			{
+				cout << "RB Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[6])
+			{
+				cout << "Select Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[7])
+			{
+				cout << "Start Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[8])
+			{
+				cout << "Left Analog Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[9])
+			{
+				cout << "Right Analog Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[10])
+			{
+				cout << "Directional Up Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[11])
+			{
+				cout << "Directional Right Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[12])
+			{
+				cout << "Directional Down Button pressed" << endl;
+			}
+			else if (GLFW_PRESS == buttons[13])
+			{
+				cout << "Directional Left Button pressed" << endl;
+			}
+			system("CLS");
+		}
+	}
+	
+}
+
+void movePlayer(glm::vec3 &pos)
+{
+	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
+	if (1 == present)
+	{
+		int axisCount;
+		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
+
+		if(axes[1]>threshold||axes[1]<-threshold)
+		pos.z += 0.01*axes[1];
+		if(axes[0] > threshold || axes[0] < -threshold)
+		pos.x += 0.01*axes[0];
+		if (axes[2] > threshold || axes[2] < -threshold || axes[3]>threshold || axes[3] < -threshold)
+		camera.ProcessMouseMovement(0.3*axes[2], -0.3*axes[3]);
+
+		int buttonCount;
+		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
+		if (GLFW_PRESS == buttons[0])
+		{
+			pos.y += 0.1f;
+		}
+		
+
+	}
+}
+
+void joystick_callback(int jid, int event)
+{
+	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
+	const char* name = glfwGetJoystickName(GLFW_JOYSTICK_1);
+	if (event == GLFW_CONNECTED)
+	{
+		cout << name << " conectado " << present;
+	}
+	else if (event == GLFW_DISCONNECTED)
+	{
+		cout  << " desconactado " << present;
+	}
+}

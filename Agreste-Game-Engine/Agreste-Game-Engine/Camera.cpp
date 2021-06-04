@@ -100,12 +100,40 @@ void Camera::setPosition(glm::vec3 position)
 
 void Camera::setFront(glm::vec3 front)
 {
-	
-	this->yaw = (glm::angle(glm::vec3(this->front.x, this->front.y, 0.0f), glm::vec3(front.x, front.y, 0.f))) * 57, 2958;
+	glm::vec2 aux1(this->front.x,this->front.z);
+	glm::vec2 aux2(front.x,front.z);
+	aux1 = glm::normalize(aux1);
+	aux2 = glm::normalize(aux2);
+	float a;
+	a = glm::degrees(glm::angle(aux1, aux2));
+	this->yaw -= a;
+	aux1 = glm::vec2(this->front.y, this->front.z);
+	aux2 = glm::vec2(front.y, front.z);
+	aux1 = glm::normalize(aux1);
+	aux2 = glm::normalize(aux2);
+	a = glm::degrees(glm::angle(aux1,aux2));
+	this->pitch -= a;
+	if (this->pitch > 89.0f)
+	{
+		this->pitch = 89.0f;
+	}
+
+	if (this->pitch < -89.0f)
+	{
+		this->pitch = -89.0f;
+	}
+
 	this->front = glm::normalize(front);
 	// Also re-calculate the Right and Up vector
 	this->right = glm::normalize(glm::cross(this->front, this->worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	this->up = glm::normalize(glm::cross(this->right, this->front));
+}
+
+void Camera::setBehind(glm::vec3 position)
+{
+	glm::vec3 aux(0.0f, 3.0f, 3.5f);
+	this->setFront(front-aux);
+	this->setPosition(aux+position);
 }
 
 void Camera::updateCameraVectors()

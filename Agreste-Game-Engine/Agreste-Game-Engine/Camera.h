@@ -61,6 +61,8 @@ public:
 
 	void setFront(glm::vec3 front);
 
+	void setBehind(glm::vec3 position);
+
 private:
 	// Camera Attributes
 	glm::vec3 position;
