@@ -7,7 +7,7 @@ GameObject::GameObject(string const & objPath, const GLchar *vertexShaderPath, c
 	model(objPath)
 {
 	this->position = glm::vec3(0.0f, 0.0f, 0.0f);
-	this->velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+	
 	this->fixed = true;
 	this->tangible = false;
 	this->stencilMode = false;
@@ -37,15 +37,57 @@ void GameObject::setPosition(glm::vec3 position)
 	this->position = position;
 }
 
-glm::vec3 GameObject::getVelocity()
+glm::vec3 GameObject::getFront()
 {
-	return this->velocity;
+	return this->front;
 }
 
-void GameObject::setVelocity(glm::vec3 velocity)
+void GameObject::setFront(glm::vec3 front)
 {
-	this->velocity = velocity;
+	this->front = front;
 }
+
+glm::vec3 GameObject::getWorldUp()
+{
+	return this->worldUp;
+}
+
+void GameObject::setWorldUp(glm::vec3 worldUp)
+{
+	this->worldUp = worldUp;
+}
+
+glm::vec3 GameObject::getUp()
+{
+	return this->up;
+}
+
+void GameObject::setUp(glm::vec3 up)
+{
+	this->up = up;
+}
+
+glm::vec3 GameObject::getRight()
+{
+	return this->right;
+}
+
+void GameObject::setRight(glm::vec3 right)
+{
+	this->right = right;
+}
+
+GLfloat GameObject::getMoveSpeed()
+{
+	return this->moveSpeed;
+}
+
+void GameObject::setMoveSpeed(GLfloat moveSpeed)
+{
+	this->moveSpeed = moveSpeed;
+}
+
+
 
 Shader GameObject::getShader()
 {
