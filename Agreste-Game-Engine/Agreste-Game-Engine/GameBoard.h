@@ -21,7 +21,7 @@ private:
 	float ScreenWidth, ScreenHeight;
 
 public:
-	vector<GameObject> gameObjects;
+	vector<GameObject*> gameObjects;
 	GameBoard(float ScreenWidth, float ScreenHeight);
 	void drawGameObjects();
 	glm::mat4 getModel();
@@ -37,6 +37,6 @@ public:
 	float getScreenWidth();
 	float getScreenHeight();
 	void addGameObject(string const & objPath, const GLchar *vertexShaderPath = "model_loading.vs", const GLchar *fragmentShaderPath = "model_loading.fs");
-
+	
 };
 

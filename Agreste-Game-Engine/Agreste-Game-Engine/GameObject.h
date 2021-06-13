@@ -3,6 +3,9 @@
 #include "Shader.h"
 #include "Model.h"
 #include "GameBoard.h"
+#include "Camera.h"
+
+constexpr auto threshold = 0.5;
 
 using namespace std;
 
@@ -50,5 +53,6 @@ public:
 	glm::vec4 getRawColor();
 	void setRawColor(glm::vec4 color);
 	void drawStencil( GameBoard & board);
+	void processGamePadAxisMovement(Camera_Movement direction ,float axisValue, float deltaTime);
 };
 

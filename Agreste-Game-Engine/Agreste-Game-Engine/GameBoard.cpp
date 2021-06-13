@@ -38,13 +38,13 @@ void GameBoard::drawGameObjects()
 	{
 		for (size_t i = 0; i < this->gameObjects.size(); i++)
 		{
-			if (!this->gameObjects[i].isStencilMode()) 
+			if (!(*this->gameObjects[i]).isStencilMode()) 
 			{
-				this->gameObjects[i].draw(*this);
+				(*this->gameObjects[i]).draw(*this);
 			}
 			else 
 			{
-				this->gameObjects[i].drawStencil(*this);
+				(*this->gameObjects[i]).drawStencil(*this);
 			}
 			
 		}
@@ -115,6 +115,8 @@ float GameBoard::getScreenHeight()
 
 void GameBoard::addGameObject(string const & objPath, const GLchar * vertexShaderPath, const GLchar * fragmentShaderPath)
 {
-	GameObject newGameObject(objPath, vertexShaderPath, fragmentShaderPath);
-	gameObjects.push_back(newGameObject);
+	GameObject *aux = new GameObject(objPath, vertexShaderPath, fragmentShaderPath);
+	gameObjects.push_back(aux);
 }
+
+

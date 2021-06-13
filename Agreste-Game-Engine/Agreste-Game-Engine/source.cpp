@@ -26,7 +26,7 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos);
 void joystick_callback(int jid, int event);
 void DoMovement();
 void joyPadTest(bool test);
-void movePlayer(glm::vec3 &pos);
+void movePlayer(GameObject * p1);
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -96,13 +96,13 @@ int main()
 	
 	GameBoard board(SCREEN_WIDTH, SCREEN_HEIGHT);
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
-	board.gameObjects[0].setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
-	board.gameObjects[0].unfix();
+	(*board.gameObjects[0]).setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+	(*board.gameObjects[0]).unfix();
 
-	camera.setBehind(board.gameObjects[0].getPosition());
+	camera.setBehind((*board.gameObjects[0]).getPosition());
 
 	glm::vec3 gravity(0.0f, -0.01f, 0.0);
-	glm::vec3 movementBox(0.0f, 0.0f, 0.0f);
+	//glm::vec3 movementBox(0.0f, 0.0f, 0.0f);
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -111,14 +111,14 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		movementBox = glm::vec3(0);
+		//movementBox = glm::vec3(0);
 		
 		
 		for (size_t i = 0; i < board.gameObjects.size(); i++)
 		{
-			if (!board.gameObjects[i].isFixed() && board.gameObjects[i].getPosition().y>0)
+			if (!(*board.gameObjects[i]).isFixed() && (*board.gameObjects[i]).getPosition().y>0)
 			{
-				board.gameObjects[i].setPosition(board.gameObjects[i].getPosition() + gravity);
+				(*board.gameObjects[i]).setPosition((*board.gameObjects[i]).getPosition() + gravity);
 			}
 		}
 		board.setCamera(camera);
@@ -127,8 +127,8 @@ int main()
 
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
-		movePlayer(movementBox);
-		board.gameObjects[0].setPosition(board.gameObjects[0].getPosition() + movementBox);
+		movePlayer(board.gameObjects[0]);
+		//(*board.gameObjects[0]).setPosition((*board.gameObjects[0]).getPosition() + movementBox);
 		//DoMovement();
 		joyPadTest(false);
 	
@@ -290,7 +290,7 @@ void joyPadTest(bool test)
 	
 }
 
-void movePlayer(glm::vec3 &pos)
+void movePlayer(GameObject * p1)
 {
 	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
 	if (1 == present)
@@ -298,18 +298,19 @@ void movePlayer(glm::vec3 &pos)
 		int axisCount;
 		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
 
-		if(axes[1]>threshold||axes[1]<-threshold)
-		pos.z += 0.01*axes[1];
-		if(axes[0] > threshold || axes[0] < -threshold)
-		pos.x += 0.01*axes[0];
-		if (axes[2] > threshold || axes[2] < -threshold || axes[3]>threshold || axes[3] < -threshold)
+		if (axes[1] > threshold || axes[1] < -threshold) //front x back
+			p1->processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
+												  
+		if(axes[0] > threshold || axes[0] < -threshold) //left x right
+			p1->processGamePadAxisMovement(RIGHT, axes[0], deltaTime);
+		if (axes[2] > threshold || axes[2] < -threshold || axes[3]>threshold || axes[3] < -threshold) //camera
 		camera.ProcessMouseMovement(0.3*axes[2], -0.3*axes[3]);
 
 		int buttonCount;
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 		if (GLFW_PRESS == buttons[0])
 		{
-			pos.y += 0.1f;
+			//pos.y += 0.1f;
 		}
 		
 

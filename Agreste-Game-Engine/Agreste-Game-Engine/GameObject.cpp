@@ -7,10 +7,14 @@ GameObject::GameObject(string const & objPath, const GLchar *vertexShaderPath, c
 	model(objPath)
 {
 	this->position = glm::vec3(0.0f, 0.0f, 0.0f);
-	
 	this->fixed = true;
 	this->tangible = false;
 	this->stencilMode = false;
+	this->up = glm::vec3(0.0f, 1.0f, 0.0f);
+	this->worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	this->front = glm::vec3(0.0f, 0.0f, -1.0f);
+	this->right = glm::vec3(1.0f, 0.0f, 0.0f);
+	this->moveSpeed = 3.0;
 }
 
 void GameObject::draw(GameBoard & board)
@@ -138,6 +142,25 @@ void GameObject::setRawColor(glm::vec4 color)
 {
 	this->rawColor = color;
 }
+
+void GameObject::processGamePadAxisMovement(Camera_Movement direction, float axisValue, float deltaTime)
+{
+	float sign;
+	if (axisValue > 0)
+		sign = -1.0f;
+	else
+		sign = 1.0f;
+
+	if (direction == FORWARD)
+	{
+		this->position += front * sign * moveSpeed * deltaTime;
+	}
+	if (direction == RIGHT)
+	{
+		this->position -= right * sign * moveSpeed * deltaTime;
+	}
+}
+
 
 void GameObject::drawStencil( GameBoard & board)
 {
