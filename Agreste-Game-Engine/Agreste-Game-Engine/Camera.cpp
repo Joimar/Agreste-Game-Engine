@@ -48,6 +48,7 @@ void Camera::ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime)
 	}
 }
 
+
 void Camera::ProcessMouseMovement(GLfloat xOffset, GLfloat yOffset, GLboolean constrainPitch)
 {
 	xOffset *= this->mouseSensitivity;
@@ -132,7 +133,7 @@ void Camera::setFront(glm::vec3 front)
 void Camera::setBehind(glm::vec3 position)
 {
 	glm::vec3 aux(0.0f, 3.0f, 3.5f);
-	this->setFront(front-aux);
+	this->setFront(front-aux+position);
 	this->setPosition(aux+position);
 }
 
@@ -148,3 +149,5 @@ void Camera::updateCameraVectors()
 	this->right = glm::normalize(glm::cross(this->front, this->worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	this->up = glm::normalize(glm::cross(this->right, this->front));
 }
+
+

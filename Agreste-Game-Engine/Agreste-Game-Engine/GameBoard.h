@@ -7,7 +7,6 @@
 
 class GameObject;
 
-
 using namespace std;
 
 class GameBoard

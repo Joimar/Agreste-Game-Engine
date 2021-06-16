@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "GameObject.h"
 #include "GameBoard.h"
+#include "Physics.h"
 
 #define threshold  0.5
 
@@ -98,10 +99,16 @@ int main()
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
 	(*board.gameObjects[0]).setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
 	(*board.gameObjects[0]).unfix();
+	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
+	(*board.gameObjects[1]).setPosition(glm::vec3(2.0f, 0.0f, 2.0f));
+	(*board.gameObjects[1]).unfix();
 
 	camera.setBehind((*board.gameObjects[0]).getPosition());
 
 	glm::vec3 gravity(0.0f, -0.01f, 0.0);
+
+	Physics py;
+
 	//glm::vec3 movementBox(0.0f, 0.0f, 0.0f);
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -128,6 +135,13 @@ int main()
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		movePlayer(board.gameObjects[0]);
+		if (py.detectCollision(*board.gameObjects[0], *board.gameObjects[1]))
+		{
+			cout << "true" << endl;
+			//(*board.gameObjects[0]).Move(py.normalResponse, deltaTime);
+			cout << "(" << py.normalResponse.x << ", " << py.normalResponse.y << ", " << py.normalResponse.z << ")" << endl;
+
+		}
 		//(*board.gameObjects[0]).setPosition((*board.gameObjects[0]).getPosition() + movementBox);
 		//DoMovement();
 		joyPadTest(false);
@@ -300,9 +314,11 @@ void movePlayer(GameObject * p1)
 
 		if (axes[1] > threshold || axes[1] < -threshold) //front x back
 			p1->processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
+			
 												  
 		if(axes[0] > threshold || axes[0] < -threshold) //left x right
 			p1->processGamePadAxisMovement(RIGHT, axes[0], deltaTime);
+			
 		if (axes[2] > threshold || axes[2] < -threshold || axes[3]>threshold || axes[3] < -threshold) //camera
 		camera.ProcessMouseMovement(0.3*axes[2], -0.3*axes[3]);
 
@@ -310,7 +326,20 @@ void movePlayer(GameObject * p1)
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 		if (GLFW_PRESS == buttons[0])
 		{
-			//pos.y += 0.1f;
+			
+			cout << "--------------posicao -------------" << endl;
+			cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
+			cout << "--------------posicao -------------" << endl;
+			cout << "(" << camera.GetPosition().x << ", " << camera.GetPosition().y << ", " << camera.GetPosition().z << ")" << endl;
+			cout << "--------------posicao -------------" << endl;
+			for (size_t i = 0; i < (*p1).getModel().meshes[0].vertices.size(); i++)
+			{
+				glm::vec3 pos = (*p1).getModel().meshes[0].vertices[i].Position + (*p1).getPosition();
+				cout << "(" << pos.x <<","<< pos.y <<","<< pos.z <<")"<< endl;
+				camera.setBehind((*p1).getPosition());
+				//cout << (*p1).getModel().meshes[0].indices[i]<<endl;
+			}
+			cout << "--------------fim -------------"<< endl;
 		}
 		
 

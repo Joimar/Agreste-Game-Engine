@@ -13,7 +13,7 @@ class GameBoard;
 
 class GameObject
 {
-private:
+protected:
 	Shader shader;
 	Model model;
 	glm::vec3 position;
@@ -53,6 +53,8 @@ public:
 	glm::vec4 getRawColor();
 	void setRawColor(glm::vec4 color);
 	void drawStencil( GameBoard & board);
-	void processGamePadAxisMovement(Camera_Movement direction ,float axisValue, float deltaTime);
+	virtual void processGamePadAxisMovement(Camera_Movement direction ,float axisValue, float deltaTime);
+	Model getModel();
+	void Move(glm::vec3 direction, float deltaTime);
 };
 

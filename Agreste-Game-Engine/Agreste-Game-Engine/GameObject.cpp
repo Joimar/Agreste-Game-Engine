@@ -15,6 +15,8 @@ GameObject::GameObject(string const & objPath, const GLchar *vertexShaderPath, c
 	this->front = glm::vec3(0.0f, 0.0f, -1.0f);
 	this->right = glm::vec3(1.0f, 0.0f, 0.0f);
 	this->moveSpeed = 3.0;
+	this->rawColor = glm::vec4(0.0f, 0.0f, 0.0f,1.0f);
+	
 }
 
 void GameObject::draw(GameBoard & board)
@@ -143,7 +145,7 @@ void GameObject::setRawColor(glm::vec4 color)
 	this->rawColor = color;
 }
 
-void GameObject::processGamePadAxisMovement(Camera_Movement direction, float axisValue, float deltaTime)
+ void GameObject::processGamePadAxisMovement(Camera_Movement direction, float axisValue, float deltaTime)
 {
 	float sign;
 	if (axisValue > 0)
@@ -159,6 +161,17 @@ void GameObject::processGamePadAxisMovement(Camera_Movement direction, float axi
 	{
 		this->position -= right * sign * moveSpeed * deltaTime;
 	}
+
+}
+
+Model GameObject::getModel()
+{
+	return this->model;
+}
+
+void GameObject::Move(glm::vec3 direction, float deltaTime)
+{
+	this->position += direction * moveSpeed*deltaTime;
 }
 
 
