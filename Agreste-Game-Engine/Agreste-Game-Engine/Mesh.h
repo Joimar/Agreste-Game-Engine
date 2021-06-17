@@ -38,11 +38,18 @@ public:
 	unsigned int VAO;
 	Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
 	void Draw(Shader &shader);
+	float maxX, maxY, maxZ, minX, minY, minZ;
+	//the difference between the max and min y
+	float height; 
+	//the difference between the max and min z
+	float length; 
+	//the difference between the max and min x
+	float width;
 private:
 	// render data 
 	unsigned int VBO, EBO;
-
 	// initializes all the buffer objects/arrays
 	void setupMesh();
+	void createMeshBindingBox();
 };
 

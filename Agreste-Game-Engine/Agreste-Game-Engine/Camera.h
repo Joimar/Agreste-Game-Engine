@@ -10,16 +10,10 @@
 #include <glm/glm.hpp>
 #include<glm/gtx/vector_angle.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include"CameraMovement.h"
 
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement
-{
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT
-};
 
 // Default camera values
 const GLfloat YAW = -90.0f;
@@ -64,7 +58,11 @@ public:
 
 	void setBehind(glm::vec3 position);
 
-private:
+	// Eular Angles
+	GLfloat yaw;
+	GLfloat pitch;
+
+protected:
 	// Camera Attributes
 	glm::vec3 position;
 	glm::vec3 front;
@@ -72,9 +70,7 @@ private:
 	glm::vec3 right;
 	glm::vec3 worldUp;
 
-	// Eular Angles
-	GLfloat yaw;
-	GLfloat pitch;
+	
 
 	// Camera options
 	GLfloat movementSpeed;
@@ -83,6 +79,7 @@ private:
 
 	// Calculates the front vector from the Camera's (updated) Eular Angles
 	void updateCameraVectors();
+
 
 	
 	

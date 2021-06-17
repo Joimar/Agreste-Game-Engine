@@ -8,6 +8,7 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
 
 	// now that we have all the required data, set the vertex buffers and its attribute pointers.
 	setupMesh();
+	createMeshBindingBox();
 }
 
 void Mesh::Draw(Shader & shader)
@@ -83,6 +84,68 @@ void Mesh::setupMesh()
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
 	glBindVertexArray(0);
+}
+
+void Mesh::createMeshBindingBox()
+{
+	//determine minX
+	minX = this->vertices[0].Position.x;
+	for (int i = 0; i < this->vertices.size(); i++)
+	{
+		if (this->vertices[i].Position.x < minX)
+		{
+			minX = this->vertices[i].Position.x;
+		}
+	}
+	//determine minY
+	minY = this->vertices[0].Position.y;
+	for (int i = 0; i < this->vertices.size(); i++)
+	{
+		if (this->vertices[i].Position.y < minY)
+		{
+			minY = this->vertices[i].Position.y;
+		}
+	}
+	//determine minZ
+	minZ = this->vertices[0].Position.z;
+	for (int i = 0; i < this->vertices.size(); i++)
+	{
+		if (this->vertices[i].Position.z < minZ)
+		{
+			minZ = this->vertices[i].Position.z;
+		}
+	}
+	//determine maxX
+	maxX = this->vertices[0].Position.x;
+	for (int i = 0; i < this->vertices.size(); i++)
+	{
+		if (this->vertices[i].Position.x > maxX)
+		{
+			maxX = this->vertices[i].Position.x;
+		}
+	}
+	//determine maxY
+	maxY = this->vertices[0].Position.y;
+	for (int i = 0; i < this->vertices.size(); i++)
+	{
+		if (this->vertices[i].Position.y > maxY)
+		{
+			maxY = this->vertices[i].Position.y;
+		}
+	}
+	//determine maxZ
+	maxZ = this->vertices[0].Position.z;
+	for (int i = 0; i < this->vertices.size(); i++)
+	{
+		if (this->vertices[i].Position.z > maxZ)
+		{
+			maxZ = this->vertices[i].Position.z;
+		}
+	}
+	length = maxZ - minZ;
+	width = maxX - minX;
+	height = maxY - minY;
+
 }
 
 

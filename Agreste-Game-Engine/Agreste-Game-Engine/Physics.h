@@ -14,6 +14,7 @@ public:
 	Physics();
 	//returns true if the object 1 is coliding with object 2, obj1 is the referential
 	bool detectCollision(GameObject obj1, GameObject obj2);
+	void gravityForce(vector<GameObject*> GameObjects);
 	
 };
 

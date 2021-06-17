@@ -120,14 +120,7 @@ int main()
 
 		//movementBox = glm::vec3(0);
 		
-		
-		for (size_t i = 0; i < board.gameObjects.size(); i++)
-		{
-			if (!(*board.gameObjects[i]).isFixed() && (*board.gameObjects[i]).getPosition().y>0)
-			{
-				(*board.gameObjects[i]).setPosition((*board.gameObjects[i]).getPosition() + gravity);
-			}
-		}
+		py.gravityForce(board.gameObjects);
 		board.setCamera(camera);
 		board.drawGameObjects();//se não tiver game objects ele desenha o skybox sozinho
 		glm::vec3 aux(0.0f, 3.0f, 3.5f);
@@ -137,10 +130,15 @@ int main()
 		movePlayer(board.gameObjects[0]);
 		if (py.detectCollision(*board.gameObjects[0], *board.gameObjects[1]))
 		{
-			cout << "true" << endl;
+			(*board.gameObjects[0]).setStencilMode(true);
+			//cout << "true" << endl;
 			//(*board.gameObjects[0]).Move(py.normalResponse, deltaTime);
-			cout << "(" << py.normalResponse.x << ", " << py.normalResponse.y << ", " << py.normalResponse.z << ")" << endl;
+			//cout << "(" << py.normalResponse.x << ", " << py.normalResponse.y << ", " << py.normalResponse.z << ")" << endl;
 
+		}
+		else
+		{
+			(*board.gameObjects[0]).setStencilMode(false);
 		}
 		//(*board.gameObjects[0]).setPosition((*board.gameObjects[0]).getPosition() + movementBox);
 		//DoMovement();
@@ -319,14 +317,23 @@ void movePlayer(GameObject * p1)
 		if(axes[0] > threshold || axes[0] < -threshold) //left x right
 			p1->processGamePadAxisMovement(RIGHT, axes[0], deltaTime);
 			
-		if (axes[2] > threshold || axes[2] < -threshold || axes[3]>threshold || axes[3] < -threshold) //camera
-		camera.ProcessMouseMovement(0.3*axes[2], -0.3*axes[3]);
-
+		if (axes[2] > threshold || axes[2] < -threshold || axes[3]>threshold || axes[3] < -threshold) 
+		{ //camera
+		//camera.ProcessMouseMovement(0.3*axes[2], -0.3*axes[3]);
+			(*p1).processGamePadAxisRotation(0.3*axes[2], -0.3*axes[3]);
+			cout << (*p1).getYaw() << endl;
+			cout << "front-> (" << (*p1).getFront().x << "," << (*p1).getFront().y << "," << (*p1).getFront().z << ")" << endl;
+		}
 		int buttonCount;
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 		if (GLFW_PRESS == buttons[0])
 		{
+			glm::vec3 direction = (*p1).getUp();
+			direction *= 5;
+			(*p1).Move(direction, deltaTime);
+
 			
+			/*
 			cout << "--------------posicao -------------" << endl;
 			cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
 			cout << "--------------posicao -------------" << endl;
@@ -337,9 +344,9 @@ void movePlayer(GameObject * p1)
 				glm::vec3 pos = (*p1).getModel().meshes[0].vertices[i].Position + (*p1).getPosition();
 				cout << "(" << pos.x <<","<< pos.y <<","<< pos.z <<")"<< endl;
 				camera.setBehind((*p1).getPosition());
-				//cout << (*p1).getModel().meshes[0].indices[i]<<endl;
+				cout << "-----Comprimento=" << (*p1).getModel().meshes[0].length << "//altura=" << (*p1).getModel().meshes[0].height << "//largura" << (*p1).getModel().meshes[0].width << "-----" <<endl;
 			}
-			cout << "--------------fim -------------"<< endl;
+			cout << "--------------fim -------------"<< endl;*/
 		}
 		
 

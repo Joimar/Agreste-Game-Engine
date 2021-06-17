@@ -3,7 +3,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include "GameBoard.h"
-#include "Camera.h"
+#include "CameraMovement.h"
 
 constexpr auto threshold = 0.5;
 
@@ -26,6 +26,7 @@ protected:
 	bool tangible;
 	bool stencilMode;
 	glm::vec4 rawColor;
+	GLfloat yaw,pitch;
 
 public:
 	GameObject(string const & objPath, const GLchar *vertexShaderPath = "model_loading.vs", const GLchar *fragmentShaderPath = "model_loading.fs");
@@ -54,7 +55,13 @@ public:
 	void setRawColor(glm::vec4 color);
 	void drawStencil( GameBoard & board);
 	virtual void processGamePadAxisMovement(Camera_Movement direction ,float axisValue, float deltaTime);
+	virtual void processGamePadAxisRotation(GLfloat xOffset, GLfloat yOffset, GLboolean constrainPitch = true);
 	Model getModel();
+	GLfloat getYaw();
+	void setYaw(GLfloat yaw);
+	GLfloat getPitch();
+	void setPitch(GLfloat pitch);
 	void Move(glm::vec3 direction, float deltaTime);
+	void updateVectors();
 };
 
