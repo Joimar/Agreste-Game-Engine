@@ -19,12 +19,12 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 		bool breakPlane = false;
 		bool inside_sphere = false;
 		bool inside_Binding_box = false;
-		x_max = obj2.getModel().meshes[i].maxX + point.x;
-		y_max = obj2.getModel().meshes[i].maxY + point.y;
-		z_max = obj2.getModel().meshes[i].maxZ + point.z;
-		x_min = obj2.getModel().meshes[i].minX + point.x;
-		y_min = obj2.getModel().meshes[i].minY + point.y;
-		z_min = obj2.getModel().meshes[i].minZ + point.z;
+		x_max = obj2.getModel().meshes[i].maxX + point2.x;
+		y_max = obj2.getModel().meshes[i].maxY + point2.y;
+		z_max = obj2.getModel().meshes[i].maxZ + point2.z;
+		x_min = obj2.getModel().meshes[i].minX + point2.x;
+		y_min = obj2.getModel().meshes[i].minY + point2.y;
+		z_min = obj2.getModel().meshes[i].minZ + point2.z;
 		float boundSphereRadius = distance(point2, glm::vec3(x_min, y_min, z_min));
 		if (boundSphereRadius <0)
 		{
@@ -47,6 +47,10 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 			float div = sqrt((normal.x*normal.x) + (normal.y*normal.y) + (normal.z*normal.z));
 			planeDistance = (glm::dot(normal, point) + d) / div;
 			float distance_from_center_to_center = glm::distance(point, point2);
+			if (distance_from_center_to_center <0)
+			{
+				distance_from_center_to_center *= -1;
+			}
 
 			if (distance_from_center_to_center < (radius+boundSphereRadius))
 			{
@@ -63,7 +67,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 			}*/
 			if (x_min < point.x && point.x < x_max)
 			{
-				if (y_min < point.y )
+				if (y_min < point.y && point.y < y_max )
 				{
 					if (z_min < point.z && point.z < z_max) 
 					{
