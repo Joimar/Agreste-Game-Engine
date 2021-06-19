@@ -23,6 +23,27 @@ glm::mat4 Camera::GetViewMatrix()
 	return glm::lookAt(this->position, this->position + this->front, this->up);
 }
 
+void Camera::processGamePadAxisMovement(Camera_Movement direction, float axisValue, float deltaTime)
+{
+	float sign;
+	if (axisValue > 0)
+		sign = -1.0f;
+	else
+		sign = 1.0f;
+	glm::vec3 deltaFront = front * sign * movementSpeed * deltaTime;
+	glm::vec3 deltaRight = right * sign * movementSpeed * deltaTime;
+	
+
+	if (direction == FORWARD)
+	{
+		this->position += deltaFront;
+	}
+	if (direction == RIGHT)
+	{
+		this->position -= deltaRight;
+	}
+}
+
 void Camera::ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime)
 {
 	GLfloat velocity = this->movementSpeed * deltaTime;
@@ -132,10 +153,50 @@ void Camera::setFront(glm::vec3 front)
 
 void Camera::setBehind(glm::vec3 position)
 {
+
 	glm::vec3 aux(0.0f, 3.0f, 3.5f);
-	this->setFront(front-aux+position);
-	this->setPosition(aux+position);
+	this->setFront(front - aux + position);
+	this->setPosition(aux + position);
 }
+
+GLfloat Camera::getYaw()
+{
+	return this->yaw;
+}
+
+GLfloat Camera::getPitch()
+{
+	return this->pitch;
+}
+
+void Camera::setYaw(GLfloat yaw)
+{
+	this->yaw = yaw;
+}
+
+void Camera::setPitch(GLfloat pitch)
+{
+	this->pitch = pitch;
+}
+
+GLfloat Camera::getMoveSpeed()
+{
+	return this->movementSpeed;
+}
+
+void Camera::updateThirdPersonVectors()
+{
+	// Calculate the new Front vector
+	glm::vec3 front;
+	front.x = -1*cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+	front.y = sin(glm::radians(this->pitch));
+	front.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+	this->front = glm::normalize(front);
+	// Also re-calculate the Right and Up vector
+	this->right = glm::normalize(glm::cross(this->front, this->worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	this->up = glm::normalize(glm::cross(this->right, this->front));
+}
+
 
 void Camera::updateCameraVectors()
 {

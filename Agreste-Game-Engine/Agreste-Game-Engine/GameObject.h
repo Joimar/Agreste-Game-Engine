@@ -63,5 +63,6 @@ public:
 	void setPitch(GLfloat pitch);
 	void Move(glm::vec3 direction, float deltaTime);
 	void updateVectors();
+	
 };
 

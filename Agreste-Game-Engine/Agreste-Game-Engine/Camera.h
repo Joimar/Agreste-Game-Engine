@@ -13,6 +13,7 @@
 #include"CameraMovement.h"
 
 
+
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 
 // Default camera values
@@ -34,6 +35,8 @@ public:
 
 	// Returns the view matrix calculated using Eular Angles and the LookAt Matrix
 	glm::mat4 GetViewMatrix();
+
+	void processGamePadAxisMovement(Camera_Movement direction, float axisValue, float deltaTime);
 
 
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -58,9 +61,18 @@ public:
 
 	void setBehind(glm::vec3 position);
 
-	// Eular Angles
-	GLfloat yaw;
-	GLfloat pitch;
+	GLfloat getYaw();
+
+	GLfloat getPitch();
+
+	void setYaw(GLfloat yaw);
+
+	void setPitch(GLfloat pitch);
+
+	GLfloat getMoveSpeed();
+
+	void updateThirdPersonVectors();
+
 
 protected:
 	// Camera Attributes
@@ -70,7 +82,10 @@ protected:
 	glm::vec3 right;
 	glm::vec3 worldUp;
 
-	
+	// Eular Angles
+	GLfloat yaw;
+	GLfloat pitch;
+
 
 	// Camera options
 	GLfloat movementSpeed;

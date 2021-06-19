@@ -6,7 +6,6 @@
 #include"Cubemap.h"
 
 class GameObject;
-
 using namespace std;
 
 class GameBoard
@@ -15,11 +14,12 @@ private:
 	glm::mat4 model;
 	glm::mat4 view;
 	glm::mat4 projection;
-	Camera camera;
+	Camera * camera;
 	Cubemap skyCube;
 	float ScreenWidth, ScreenHeight;
 
 public:
+	void thirdPersonCamera(GameObject obj);
 	vector<GameObject*> gameObjects;
 	GameBoard(float ScreenWidth, float ScreenHeight);
 	void drawGameObjects();
@@ -29,8 +29,8 @@ public:
 	void setView(glm::mat4 view);
 	glm::mat4 getProjection();
 	void setProjection(glm::mat4 projection);
-	Camera getCamera();
-	void setCamera(Camera cam);
+	Camera * getCamera();
+	void setCamera(Camera * cam);
 	Cubemap getSkyCube();
 	void setSkyCube(string path);
 	float getScreenWidth();

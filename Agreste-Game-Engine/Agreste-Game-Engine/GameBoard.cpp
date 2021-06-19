@@ -1,14 +1,22 @@
 #include "GameBoard.h"
 
+void GameBoard::thirdPersonCamera(GameObject obj)
+{
+	(*this->camera).setYaw(obj.getYaw());
+	(*this->camera).setPitch(obj.getPitch());
+	(*this->camera).updateThirdPersonVectors();
+}
+
+
 GameBoard::GameBoard(float ScreenWidth, float ScreenHeight) :
-	camera(glm::vec3(0.0f, 0.0f, 3.0f)),
 	skyCube("../Agreste-Game-Engine/skybox")
 {
+	this->camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 	this->ScreenWidth = ScreenWidth;
 	this->ScreenHeight = ScreenHeight;
 	this->setModel(glm::mat4(1));
-	this->setProjection(glm::perspective(camera.GetZoom(), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f));
-	this->setView(camera.GetViewMatrix());
+	this->setProjection(glm::perspective((*camera).GetZoom(), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f));
+	this->setView((*camera).GetViewMatrix());
 	// OpenGL options
 	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
@@ -31,8 +39,8 @@ void GameBoard::drawGameObjects()
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
 	glStencilMask(0xFF);
 
-	this->setProjection(glm::perspective(camera.GetZoom(), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f));
-	this->setView(camera.GetViewMatrix());
+	this->setProjection(glm::perspective((*camera).GetZoom(), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f));
+	this->setView((*camera).GetViewMatrix());
 	this->setModel (glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)));	// it's a bit too big for our scene, so scale it down
 	if (!this->gameObjects.empty())
 	{
@@ -49,7 +57,7 @@ void GameBoard::drawGameObjects()
 			
 		}
 	}
-	this->skyCube.draw(glm::mat4(glm::mat3(this->getCamera().GetViewMatrix())), this->getProjection());
+	this->skyCube.draw(glm::mat4(glm::mat3((*this->getCamera()).GetViewMatrix())), this->getProjection());
 }
 
 glm::mat4 GameBoard::getModel()
@@ -82,12 +90,12 @@ void GameBoard::setProjection(glm::mat4 projection)
 	this->projection = projection;
 }
 
-Camera GameBoard::getCamera()
+Camera* GameBoard::getCamera()
 {
 	return this->camera;
 }
 
-void GameBoard::setCamera(Camera cam)
+void GameBoard::setCamera(Camera *cam)
 {
 	this->camera = cam;
 }
@@ -118,5 +126,7 @@ void GameBoard::addGameObject(string const & objPath, const GLchar * vertexShade
 	GameObject *aux = new GameObject(objPath, vertexShaderPath, fragmentShaderPath);
 	gameObjects.push_back(aux);
 }
+
+
 
 

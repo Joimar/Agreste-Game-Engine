@@ -23,11 +23,11 @@ GameObject::GameObject(string const & objPath, const GLchar *vertexShaderPath, c
 void GameObject::draw(GameBoard & board)
 {
 	glm::mat4 model = glm::translate(board.getModel(), position);
-	glm::mat4 view = board.getCamera().GetViewMatrix();
+	glm::mat4 view = (*board.getCamera()).GetViewMatrix();
 	model = glm::translate(model, this->position);
 	GLfloat Yaw = glm::radians(this->yaw);
 	model = glm::rotate(model, Yaw, glm::vec3(0.0f,1.0f,0.0f));
-	glm::mat4 projection = glm::perspective(glm::radians(board.getCamera().GetZoom()), (float)board.getScreenWidth() / (float)board.getScreenHeight(), 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians((*board.getCamera()).GetZoom()), (float)board.getScreenWidth() / (float)board.getScreenHeight(), 0.1f, 100.0f);
 	this->shader.Use();
 	this->shader.setMat4("projection", projection);
 	this->shader.setMat4("view", view);
@@ -213,7 +213,8 @@ void GameObject::setPitch(GLfloat pitch)
 
 void GameObject::Move(glm::vec3 direction, float deltaTime)
 {
-	this->position += direction * moveSpeed*deltaTime;
+	glm::vec3 aux = glm::normalize(direction);
+	this->position += aux * moveSpeed*deltaTime;
 }
 
 void GameObject::updateVectors()
@@ -228,6 +229,7 @@ void GameObject::updateVectors()
 	this->right = glm::normalize(glm::cross(this->front, this->worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	this->up = glm::normalize(glm::cross(this->right, this->front));
 }
+
 
 
 void GameObject::drawStencil( GameBoard & board)

@@ -25,9 +25,9 @@
 void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow *window, double xPos, double yPos);
 void joystick_callback(int jid, int event);
-void DoMovement();
+//void DoMovement();
 void joyPadTest(bool test);
-void movePlayer(GameObject * p1);
+void movePlayer(GameBoard board);
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -35,7 +35,6 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
@@ -98,18 +97,25 @@ int main()
 	GameBoard board(SCREEN_WIDTH, SCREEN_HEIGHT);
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
 	(*board.gameObjects[0]).setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 	(*board.gameObjects[0]).unfix();
-	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
-	(*board.gameObjects[1]).setPosition(glm::vec3(2.0f, 0.0f, 2.0f));
-	(*board.gameObjects[1]).unfix();
+	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
+	(*board.gameObjects[1]).setStencilMode(true);
+	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+	(*board.gameObjects[2]).setPosition(glm::vec3(0.0f, 4.0f, -20.0f));
+	(*board.gameObjects[2]).setStencilMode(true);
+	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+	(*board.gameObjects[3]).setPosition(glm::vec3(0.0f, 6.0f, -25.0f));
+	(*board.gameObjects[3]).setStencilMode(true);
 
-	camera.setBehind((*board.gameObjects[0]).getPosition());
+	
 
-	glm::vec3 gravity(0.0f, -0.01f, 0.0);
-
+	GameObject * Player = board.gameObjects[0];
+	Camera * cam = board.getCamera();
+	(*cam).setBehind((*Player).getPosition());
 	Physics py;
 
-	//glm::vec3 movementBox(0.0f, 0.0f, 0.0f);
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -119,27 +125,45 @@ int main()
 		lastFrame = currentFrame;
 
 		//movementBox = glm::vec3(0);
-		
-		py.gravityForce(board.gameObjects);
-		board.setCamera(camera);
+		//float y = (*Player).getPosition().y + 5;
+		//glm::vec3 camPos((*cam).GetPosition().x, y, (*cam).GetPosition().z);
+
+		//(*board.getCamera()).setPosition(camPos);
+
+		py.gravityForce(board.gameObjects, deltaTime);
+		board.thirdPersonCamera((*board.gameObjects[0]));
 		board.drawGameObjects();//se não tiver game objects ele desenha o skybox sozinho
-		glm::vec3 aux(0.0f, 3.0f, 3.5f);
 
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
-		movePlayer(board.gameObjects[0]);
-		if (py.detectCollision(*board.gameObjects[0], *board.gameObjects[1]))
+		movePlayer(board);
+		
+		if ((*Player).getPosition().y < 4.0f)
 		{
-			(*board.gameObjects[0]).setStencilMode(true);
-			//cout << "true" << endl;
-			//(*board.gameObjects[0]).Move(py.normalResponse, deltaTime);
-			//cout << "(" << py.normalResponse.x << ", " << py.normalResponse.y << ", " << py.normalResponse.z << ")" << endl;
-
+			(*Player).setStencilMode(false);
+			if (py.detectCollision(*Player, (*board.gameObjects[1])))
+			{
+				(*Player).Move(py.normalResponse, deltaTime);
+			}
+		}
+		else if ((*Player).getPosition().y > 4 && (*Player).getPosition().y < 6.0f)
+		{
+			(*Player).setStencilMode(false);
+			if (py.detectCollision(*Player, (*board.gameObjects[2])))
+			{
+				(*Player).Move(py.normalResponse, deltaTime);
+			}
 		}
 		else
 		{
-			(*board.gameObjects[0]).setStencilMode(false);
+			if (py.detectCollision(*Player, (*board.gameObjects[3])))
+			{
+				(*Player).Move(py.normalResponse, deltaTime);
+				(*Player).setStencilMode(true);
+			}
 		}
+
+		
 		//(*board.gameObjects[0]).setPosition((*board.gameObjects[0]).getPosition() + movementBox);
 		//DoMovement();
 		joyPadTest(false);
@@ -159,7 +183,7 @@ int main()
 }
 
 // Moves/alters the camera positions based on user input
-void DoMovement()
+/*void DoMovement()
 {
 	// Camera controls
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
@@ -181,7 +205,7 @@ void DoMovement()
 	{
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	}
-}
+}*/
 
 // Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
@@ -219,7 +243,7 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 	lastX = xPos;
 	lastY = yPos;
 
-	camera.ProcessMouseMovement(xOffset, yOffset);
+	//camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
 void joyPadTest(bool test) 
@@ -302,17 +326,20 @@ void joyPadTest(bool test)
 	
 }
 
-void movePlayer(GameObject * p1)
+void movePlayer(GameBoard board)
 {
+	GameObject * p1 = board.gameObjects[0];
+	Camera *cam = board.getCamera();
 	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
 	if (1 == present)
 	{
 		int axisCount;
 		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
 
-		if (axes[1] > threshold || axes[1] < -threshold) //front x back
+		if (axes[1] > threshold || axes[1] < -threshold) {//front x back
 			p1->processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
-			
+			(*board.getCamera()).processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
+		}
 												  
 		if(axes[0] > threshold || axes[0] < -threshold) //left x right
 			p1->processGamePadAxisMovement(RIGHT, axes[0], deltaTime);
@@ -321,8 +348,9 @@ void movePlayer(GameObject * p1)
 		{ //camera
 		//camera.ProcessMouseMovement(0.3*axes[2], -0.3*axes[3]);
 			(*p1).processGamePadAxisRotation(0.3*axes[2], -0.3*axes[3]);
-			cout << (*p1).getYaw() << endl;
-			cout << "front-> (" << (*p1).getFront().x << "," << (*p1).getFront().y << "," << (*p1).getFront().z << ")" << endl;
+			//cout << (*p1).getYaw() << endl;
+			//cout << "front-> (" << (*p1).getFront().x << "," << (*p1).getFront().y << "," << (*p1).getFront().z << ")" << endl;
+
 		}
 		int buttonCount;
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
@@ -330,11 +358,14 @@ void movePlayer(GameObject * p1)
 		{
 			glm::vec3 direction = (*p1).getUp();
 			direction *= 5;
-			(*p1).Move(direction, deltaTime);
-
+			(*p1).Move(direction, deltaTime*5);
+			float y = (*p1).getPosition().y + 6.5f;
+			glm::vec3 camPos((*cam).GetPosition().x, y, (*cam).GetPosition().z);
+			(*cam).setPosition(camPos);
+			cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
 			
-			/*
-			cout << "--------------posicao -------------" << endl;
+			
+			/*cout << "--------------posicao -------------" << endl;
 			cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
 			cout << "--------------posicao -------------" << endl;
 			cout << "(" << camera.GetPosition().x << ", " << camera.GetPosition().y << ", " << camera.GetPosition().z << ")" << endl;
@@ -343,7 +374,7 @@ void movePlayer(GameObject * p1)
 			{
 				glm::vec3 pos = (*p1).getModel().meshes[0].vertices[i].Position + (*p1).getPosition();
 				cout << "(" << pos.x <<","<< pos.y <<","<< pos.z <<")"<< endl;
-				camera.setBehind((*p1).getPosition());
+				camera.setBehind((*p1).getPosition(), (*p1).getFront());
 				cout << "-----Comprimento=" << (*p1).getModel().meshes[0].length << "//altura=" << (*p1).getModel().meshes[0].height << "//largura" << (*p1).getModel().meshes[0].width << "-----" <<endl;
 			}
 			cout << "--------------fim -------------"<< endl;*/

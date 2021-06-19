@@ -69,7 +69,7 @@ bool Physics::detectCollision(GameObject obj1, GameObject obj2)
 				}
 				j = j + 3;
 				continue;
-			}/**/
+			}*/
 			if (ld1 > radius &&
 				ld2 > radius &&
 				ld3 > radius)
@@ -106,7 +106,7 @@ bool Physics::detectCollision(GameObject obj1, GameObject obj2)
 	return false;
 }
 
-void Physics::gravityForce(vector<GameObject*> GameObjects)
+void Physics::gravityForce(vector<GameObject*> GameObjects, float deltaTime)
 {
 	glm::vec3 newPos;
 	
@@ -115,8 +115,8 @@ void Physics::gravityForce(vector<GameObject*> GameObjects)
 		if (!(*GameObjects[i]).isFixed() && (*GameObjects[i]).getPosition().y > 0)
 		{
 			
-			newPos = (*GameObjects[i]).getPosition() + gravity ;
-			(*GameObjects[i]).setPosition(newPos);
+			(*GameObjects[i]).Move(gravity, deltaTime);
+
 			
 		}
 	}
