@@ -9,7 +9,7 @@ Physics::Physics()
 bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 {
 	float planeDistance = 0;
-	float radius = 0.5f;
+	float radius = 1.5f;
 	float x_min, y_min, z_min;
 	float x_max, y_max, z_max;
 	glm::vec3 point = obj1.getPosition();
@@ -30,6 +30,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 		{
 			boundSphereRadius *= -1;
 		}
+		boundSphereRadius -= 4.0f;
 
 		int j = 0;
 		while (true)
@@ -52,7 +53,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 				distance_from_center_to_center *= -1;
 			}
 
-			if (distance_from_center_to_center < (radius+boundSphereRadius))
+			if (distance_from_center_to_center < (boundSphereRadius))
 			{
 				inside_sphere = true;
 			}
@@ -67,7 +68,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 			}*/
 			if (x_min < point.x && point.x < x_max)
 			{
-				if (y_min < point.y && point.y < y_max )
+				if (y_min < point.y && point.y < y_max + 0.5 )
 				{
 					if (z_min < point.z && point.z < z_max) 
 					{
