@@ -6,22 +6,36 @@ Physics::Physics()
 }
 
 
-bool Physics::detectCollision(GameObject obj1, GameObject obj2)
+bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 {
 	float planeDistance = 0;
 	float radius = 0.5f;
+	float x_min, y_min, z_min;
+	float x_max, y_max, z_max;
 	glm::vec3 point = obj1.getPosition();
+	glm::vec3 point2 = obj2.getPosition();
 	for (size_t i = 0; i < obj2.getModel().meshes.size(); i++)
 	{
-		bool awayFromFace = false;
-		bool awayFromVertices =false;
-		bool awayFromEdges =false;
+		bool breakPlane = false;
+		bool inside_sphere = false;
+		bool inside_Binding_box = false;
+		x_max = obj2.getModel().meshes[i].maxX + point.x;
+		y_max = obj2.getModel().meshes[i].maxY + point.y;
+		z_max = obj2.getModel().meshes[i].maxZ + point.z;
+		x_min = obj2.getModel().meshes[i].minX + point.x;
+		y_min = obj2.getModel().meshes[i].minY + point.y;
+		z_min = obj2.getModel().meshes[i].minZ + point.z;
+		float boundSphereRadius = distance(point2, glm::vec3(x_min, y_min, z_min));
+		if (boundSphereRadius <0)
+		{
+			boundSphereRadius *= -1;
+		}
+
 		int j = 0;
 		while (true)
 		{
-			awayFromFace = false;
-			awayFromVertices = false;
-			awayFromEdges = false;
+			breakPlane = false;
+			inside_sphere = false;
 			int index = obj2.getModel().meshes[i].indices[j];
 			glm::vec3 vertex1 = obj2.getModel().meshes[i].vertices[index].Position + obj2.getPosition();
 			glm::vec3 vertex2 = obj2.getModel().meshes[i].vertices[index+1].Position + obj2.getPosition();
@@ -32,35 +46,12 @@ bool Physics::detectCollision(GameObject obj1, GameObject obj2)
 			float d = -1*glm::dot(normal ,vertex1);
 			float div = sqrt((normal.x*normal.x) + (normal.y*normal.y) + (normal.z*normal.z));
 			planeDistance = (glm::dot(normal, point) + d) / div;
-			float vd1, vd2, vd3;
-			vd1 = glm::distance(point, vertex1);
-			if (vd1 < 0)
-				vd1 *= -1;
-			vd2 = glm::distance(point, vertex2);
-			if (vd2 < 0)
-				vd2 *= -1;
-			vd3 = glm::distance(point, vertex3);
-			if (vd3 < 0)
-				vd3 *= -1;
-			float ld1, ld2, ld3;
-			//edge formed by vertices 1,2
-			float numerator = glm::length(glm::cross((point - vertex1), (point - vertex2)));
-			float denominator = glm::length(vertex_ab);
-			ld1 = numerator / denominator;
-			if (ld1 < 0)
-				ld1 *= -1;
-			//edge formed by vertices 1,2
-			numerator = glm::length(glm::cross((point - vertex1), (point - vertex3)));
-			denominator = glm::length(vertex_ac);
-			ld2 = numerator / denominator;
-			if (ld2 < 0)
-				ld2 *= -1;
-			//edge formed by vertices 2,3
-			numerator = glm::length(glm::cross((point - vertex2), (point - vertex3)));
-			denominator = glm::length(vertex3-vertex2);
-			ld3 = numerator / denominator;
-			if (ld3 < 0)
-				ld3 *= -1;
+			float distance_from_center_to_center = glm::distance(point, point2);
+
+			if (distance_from_center_to_center < (radius+boundSphereRadius))
+			{
+				inside_sphere = true;
+			}
 			/*if (normal.y > 0.1f || normal.y<-0.1f)
 			{
 				if (j >= obj2.getModel().meshes[i].indices.size() - 3)
@@ -70,27 +61,28 @@ bool Physics::detectCollision(GameObject obj1, GameObject obj2)
 				j = j + 3;
 				continue;
 			}*/
-			if (ld1 > radius &&
-				ld2 > radius &&
-				ld3 > radius)
+			if (x_min < point.x && point.x < x_max)
 			{
-				awayFromEdges = true;
-			}
+				if (y_min < point.y )
+				{
+					if (z_min < point.z && point.z < z_max) 
+					{
+						
+							inside_Binding_box = true;
+						
+						
+					}
+				}
 
-			if (vd1 > radius &&
-				vd2 > radius &&
-				vd3 > radius)
-			{
-				awayFromVertices = true;
 			}
 
 			if (planeDistance < 0)
 				planeDistance *= -1;
-			if ((planeDistance > radius))
+			if ((planeDistance < radius))
 			{
-				awayFromFace = true;
+				breakPlane = true;
 			}
-			if (!(awayFromFace || awayFromVertices && awayFromEdges))
+			if (inside_sphere && breakPlane && inside_Binding_box)
 			{
 				this->normalResponse = normal;
 				return true;

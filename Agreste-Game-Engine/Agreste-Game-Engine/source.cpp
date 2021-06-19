@@ -138,30 +138,12 @@ int main()
 		glfwPollEvents();
 		movePlayer(board);
 		
-		if ((*Player).getPosition().y < 4.0f)
+		
+		if (py.narrowPhase(*Player, (*board.gameObjects[1])))
 		{
-			(*Player).setStencilMode(false);
-			if (py.detectCollision(*Player, (*board.gameObjects[1])))
-			{
-				(*Player).Move(py.normalResponse, deltaTime);
-			}
+			(*Player).Move(py.normalResponse, deltaTime);
 		}
-		else if ((*Player).getPosition().y > 4 && (*Player).getPosition().y < 6.0f)
-		{
-			(*Player).setStencilMode(false);
-			if (py.detectCollision(*Player, (*board.gameObjects[2])))
-			{
-				(*Player).Move(py.normalResponse, deltaTime);
-			}
-		}
-		else
-		{
-			if (py.detectCollision(*Player, (*board.gameObjects[3])))
-			{
-				(*Player).Move(py.normalResponse, deltaTime);
-				(*Player).setStencilMode(true);
-			}
-		}
+		
 
 		
 		//(*board.gameObjects[0]).setPosition((*board.gameObjects[0]).getPosition() + movementBox);
