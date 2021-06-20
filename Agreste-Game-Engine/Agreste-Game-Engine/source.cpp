@@ -27,7 +27,7 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos);
 void joystick_callback(int jid, int event);
 //void DoMovement();
 void joyPadTest(bool test);
-void movePlayer(GameBoard board);
+void movePlayer(GameBoard &board);
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -113,9 +113,9 @@ int main()
 
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
-	(*cam).setBehind((*Player).getPosition());
+	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	Physics py;
-
+	
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -131,18 +131,21 @@ int main()
 		//(*board.getCamera()).setPosition(camPos);
 
 		py.gravityForce(board.gameObjects, deltaTime);
-		board.thirdPersonCamera((*board.gameObjects[0]));
+		board.thirdPersonCamera((*board.gameObjects[0]), board.distance_from_camera_to_player);
 		board.drawGameObjects();//se não tiver game objects ele desenha o skybox sozinho
 
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		movePlayer(board);
 		
-		
-		if (py.narrowPhase(*Player, (*board.gameObjects[1])))
+		for (int i = 0; i < board.gameObjects.size(); i++)
 		{
-			(*Player).Move(py.normalResponse, deltaTime);
+			if (py.narrowPhase(*Player, (*board.gameObjects[i])))
+			{
+				(*Player).Move(py.normalResponse, deltaTime);
+			}
 		}
+		
 		
 
 		
@@ -308,7 +311,7 @@ void joyPadTest(bool test)
 	
 }
 
-void movePlayer(GameBoard board)
+void movePlayer(GameBoard &board)
 {
 	GameObject * p1 = board.gameObjects[0];
 	Camera *cam = board.getCamera();
@@ -320,7 +323,8 @@ void movePlayer(GameBoard board)
 
 		if (axes[1] > threshold || axes[1] < -threshold) {//front x back
 			p1->processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
-			(*board.getCamera()).processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
+			cout << "(" << (*cam).GetPosition().x << ", " << (*cam).GetPosition().y << ", " << (*cam).GetPosition().z << ")" << endl;
+			//(*board.getCamera()).processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
 		}
 												  
 		if(axes[0] > threshold || axes[0] < -threshold) //left x right
@@ -334,6 +338,14 @@ void movePlayer(GameBoard board)
 			//cout << "front-> (" << (*p1).getFront().x << "," << (*p1).getFront().y << "," << (*p1).getFront().z << ")" << endl;
 
 		}
+		if (axes[5] > -0.5f )
+		{
+			board.distance_from_camera_to_player += 1;
+		}
+		if (axes[4] > -0.5f)
+		{
+			board.distance_from_camera_to_player -= 1;
+		}
 		int buttonCount;
 		const unsigned char* buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1, &buttonCount);
 		if (GLFW_PRESS == buttons[0])
@@ -342,8 +354,6 @@ void movePlayer(GameBoard board)
 			direction *= 5;
 			(*p1).Move(direction, deltaTime*5);
 			float y = (*p1).getPosition().y + 6.5f;
-			glm::vec3 camPos((*cam).GetPosition().x, y, (*cam).GetPosition().z);
-			(*cam).setPosition(camPos);
 			cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
 			
 			

@@ -17,9 +17,10 @@ private:
 	Camera * camera;
 	Cubemap skyCube;
 	float ScreenWidth, ScreenHeight;
-
+	
 public:
-	void thirdPersonCamera(GameObject obj);
+	float distance_from_camera_to_player;
+	void thirdPersonCamera(GameObject obj, float distance);
 	vector<GameObject*> gameObjects;
 	GameBoard(float ScreenWidth, float ScreenHeight);
 	void drawGameObjects();

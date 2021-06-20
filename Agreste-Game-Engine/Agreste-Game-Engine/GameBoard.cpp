@@ -1,10 +1,23 @@
 #include "GameBoard.h"
 
-void GameBoard::thirdPersonCamera(GameObject obj)
+void GameBoard::thirdPersonCamera(GameObject obj, float distance)
 {
-	(*this->camera).setYaw(obj.getYaw());
-	(*this->camera).setPitch(obj.getPitch());
-	(*this->camera).updateThirdPersonVectors();
+	if (distance<0)
+	{
+		distance = 0;
+	}
+	float x, y, z;
+	float r_yaw, r_pitch;
+	r_yaw = glm::radians(obj.getYaw());
+	r_pitch = glm::radians(obj.getPitch());
+	x =  obj.getPosition().x + distance * glm::cos(r_yaw);
+	z = obj.getPosition().z - distance * glm::sin(r_yaw);
+	y = obj.getPosition().y + distance * glm::cos(r_pitch);
+	glm::vec3 newFront = this->camera->GetFront() + obj.getPosition();
+	this->camera->setPosition(glm::vec3(x, y, z));
+	this->camera->setFront(newFront);
+	
+
 }
 
 
@@ -17,6 +30,7 @@ GameBoard::GameBoard(float ScreenWidth, float ScreenHeight) :
 	this->setModel(glm::mat4(1));
 	this->setProjection(glm::perspective((*camera).GetZoom(), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f));
 	this->setView((*camera).GetViewMatrix());
+	this->distance_from_camera_to_player = 4;
 	// OpenGL options
 	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one

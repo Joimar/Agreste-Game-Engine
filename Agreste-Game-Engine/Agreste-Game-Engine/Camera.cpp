@@ -188,7 +188,7 @@ void Camera::updateThirdPersonVectors()
 {
 	// Calculate the new Front vector
 	glm::vec3 front;
-	front.x = -1*cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
+	front.x = -1.0f*cos(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
 	front.y = sin(glm::radians(this->pitch));
 	front.z = sin(glm::radians(this->yaw)) * cos(glm::radians(this->pitch));
 	this->front = glm::normalize(front);
