@@ -44,6 +44,7 @@ glm::vec3 GameObject::getPosition()
 void GameObject::setPosition(glm::vec3 position)
 {
 	this->position = position;
+	//pode colocar para atualizar maximos e minimos das meshes dos gameObjects
 }
 
 glm::vec3 GameObject::getFront()

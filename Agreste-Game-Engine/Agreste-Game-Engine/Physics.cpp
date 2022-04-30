@@ -96,6 +96,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 				j = j + 3;
 				continue;
 			}*/
+			//analise de colisão eixo a eixo
 			if (x_min < point.x && point.x < x_max)
 			{
 				if (y_min < point.y && point.y < y_max + 0.5 )

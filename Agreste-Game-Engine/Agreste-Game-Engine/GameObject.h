@@ -28,8 +28,8 @@ protected:
 	bool stencilMode;
 	glm::vec4 rawColor;
 	GLfloat yaw,pitch;
-	glm::vec3 max, min;// máximo e mínimo
-	glm::vec3 arestaList[2];
+	glm::vec3 max, min;// máximo e mínimo estao na classe mesh
+	glm::vec3 arestaList[2]; // redundante
 
 public:
 	GameObject(string const & objPath, const GLchar *vertexShaderPath = "model_loading.vs", const GLchar *fragmentShaderPath = "model_loading.fs");
