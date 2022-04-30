@@ -5,9 +5,39 @@ Physics::Physics()
 	gravity = glm::vec3(0.0f, -0.02f, 0.0);
 }
 
+bool Physics::broadPhase() // testes com sort and sweep
+{
+	//Find highest variance of axis for AABBs
+	//Sort AABBs by min on highest variance axis
+	//Go through the list, test interactions in range
+	return false;
+}
+
+bool Physics::isCollision(GameObject * obj1, GameObject * obj2) {
+	bool flagX = false;
+	bool flagY = false;
+	bool flagZ = false;
+
+	if ((obj1->getArestas()[0].x >= obj2->getArestas()[0].x) && (obj1->getArestas()[0].x <= obj2->getArestas()[1].x))
+	{
+		flagX = true;
+	}
+	if ((obj1->getArestas()[0].y >= obj2->getArestas()[0].y) && (obj1->getArestas()[0].y <= obj2->getArestas()[1].y))
+	{
+		flagY = true;
+	}
+	if ((obj1->getArestas()[0].z >= obj2->getArestas()[0].z) && (obj1->getArestas()[0].z <= obj2->getArestas()[1].z))
+	{
+		flagZ = true;
+	}
+
+	if ((flagX == true) && (flagY == true) && (flagZ == true)) return true;
+	else return false;
+}
 
 bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 {
+	//calcular o bounding box da mesh do player 
 	float planeDistance = 0;
 	float radius = 1.5f;
 	float x_min, y_min, z_min;
@@ -75,7 +105,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 						
 							inside_Binding_box = true;
 						
-						
+				
 					}
 				}
 
@@ -87,12 +117,12 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 			{
 				breakPlane = true;
 			}
-			if (inside_sphere && breakPlane && inside_Binding_box)
+			if (inside_sphere && breakPlane && inside_Binding_box)//resposta a colisao
 			{
 				this->normalResponse = normal;
 				return true;
 			}
-			if (j >= obj2.getModel().meshes[i].indices.size() - 3)
+			if (j >= obj2.getModel().meshes[i].indices.size() - 3)//evitar repeticao de vertice
 			{
 				break;
 			}

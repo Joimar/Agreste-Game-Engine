@@ -93,11 +93,11 @@ int main()
 	}
 	// Define the viewport dimensions
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	
+	//adding objects in gameboard
 	GameBoard board(SCREEN_WIDTH, SCREEN_HEIGHT);
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
 	(*board.gameObjects[0]).setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
-	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
+	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0)); 
 	(*board.gameObjects[0]).unfix();
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
@@ -113,7 +113,7 @@ int main()
 
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
-	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a câmera no mesmo lugar do player (blue flicking)
 	Physics py;
 	
 	// Game loop

@@ -246,3 +246,8 @@ void GameObject::drawStencil( GameBoard & board)
 	stencilShader.setVec4("stencil", rawColor);
 	this->model.Draw(this->shader);
 }
+
+glm::vec3* GameObject::getArestas()
+{
+	return arestaList;
+}

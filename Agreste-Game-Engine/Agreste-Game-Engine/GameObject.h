@@ -21,12 +21,15 @@ protected:
 	glm::vec3 up;
 	glm::vec3 worldUp;
 	glm::vec3 right;
+	glm::vec3 edges[2];
 	GLfloat moveSpeed;
 	bool fixed;
 	bool tangible;
 	bool stencilMode;
 	glm::vec4 rawColor;
 	GLfloat yaw,pitch;
+	glm::vec3 max, min;// máximo e mínimo
+	glm::vec3 arestaList[2];
 
 public:
 	GameObject(string const & objPath, const GLchar *vertexShaderPath = "model_loading.vs", const GLchar *fragmentShaderPath = "model_loading.fs");
@@ -63,6 +66,7 @@ public:
 	void setPitch(GLfloat pitch);
 	void Move(glm::vec3 direction, float deltaTime);
 	void updateVectors();
+	glm::vec3* getArestas();
 	
 };
 
