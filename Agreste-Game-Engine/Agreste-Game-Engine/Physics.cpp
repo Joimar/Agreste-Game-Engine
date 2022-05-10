@@ -18,7 +18,17 @@ bool Physics::isCollision(GameObject * obj1, GameObject * obj2) {
 	bool flagY = false;
 	bool flagZ = false;
 
-	if ((obj1->getArestas()[0].x >= obj2->getArestas()[0].x) && (obj1->getArestas()[0].x <= obj2->getArestas()[1].x))
+	if ((obj1->getModel().meshes[0].maxX >= obj2->getModel().meshes[0].maxX) && (obj1->getModel().meshes[0].maxX <= obj2->getModel().meshes[1].maxX)) {
+		flagX = true;
+	}
+	if ((obj1->getModel().meshes[0].maxY >= obj2->getModel().meshes[0].maxY) && (obj1->getModel().meshes[0].maxY <= obj2->getModel().meshes[1].maxY)) {
+		flagX = true;
+	}
+	if ((obj1->getModel().meshes[0].maxZ >= obj2->getModel().meshes[0].maxZ) && (obj1->getModel().meshes[0].maxZ <= obj2->getModel().meshes[1].maxZ)) {
+		flagX = true;
+	}
+
+	/*if ((obj1->getArestas()[0].x >= obj2->getArestas()[0].x) && (obj1->getArestas()[0].x <= obj2->getArestas()[1].x))
 	{
 		flagX = true;
 	}
@@ -29,9 +39,13 @@ bool Physics::isCollision(GameObject * obj1, GameObject * obj2) {
 	if ((obj1->getArestas()[0].z >= obj2->getArestas()[0].z) && (obj1->getArestas()[0].z <= obj2->getArestas()[1].z))
 	{
 		flagZ = true;
+	}*/
+
+	if ((flagX == true) && (flagY == true) && (flagZ == true)){ 
+		std::cout << "Colidiu" << std::endl;
+		return true;
 	}
 
-	if ((flagX == true) && (flagY == true) && (flagZ == true)) return true;
 	else return false;
 }
 

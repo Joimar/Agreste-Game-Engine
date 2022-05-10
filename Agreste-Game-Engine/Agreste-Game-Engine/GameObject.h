@@ -28,11 +28,12 @@ protected:
 	bool stencilMode;
 	glm::vec4 rawColor;
 	GLfloat yaw,pitch;
-	glm::vec3 max, min;// máximo e mínimo estao na classe mesh
-	glm::vec3 arestaList[2]; // redundante
+	//glm::vec3 max, min;// máximo e mínimo estao na classe mesh
+	//glm::vec3 arestaList[2]; // redundante
 
 public:
 	GameObject(string const & objPath, const GLchar *vertexShaderPath = "model_loading.vs", const GLchar *fragmentShaderPath = "model_loading.fs");
+
 	void draw( GameBoard & board);
 	glm::vec3 getPosition();
 	void setPosition(glm::vec3 position);
@@ -66,7 +67,6 @@ public:
 	void setPitch(GLfloat pitch);
 	void Move(glm::vec3 direction, float deltaTime);
 	void updateVectors();
-	glm::vec3* getArestas();
 	
 };
 

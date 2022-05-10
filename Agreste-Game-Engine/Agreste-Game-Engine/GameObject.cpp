@@ -248,7 +248,3 @@ void GameObject::drawStencil( GameBoard & board)
 	this->model.Draw(this->shader);
 }
 
-glm::vec3* GameObject::getArestas()
-{
-	return arestaList;
-}
