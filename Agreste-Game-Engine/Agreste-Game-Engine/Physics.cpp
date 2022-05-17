@@ -17,16 +17,25 @@ bool Physics::isCollision(GameObject * obj1, GameObject * obj2) {
 	bool flagX = false;
 	bool flagY = false;
 	bool flagZ = false;
+	std::vector<Mesh> mesh1 = obj1->getModel().meshes;
+	std::vector<Mesh> mesh2 = obj2->getModel().meshes;
 
-	if ((obj1->getModel().meshes[0].maxX >= obj2->getModel().meshes[0].maxX) && (obj1->getModel().meshes[0].maxX <= obj2->getModel().meshes[1].maxX)) {
-		flagX = true;
+	for (int i = 0; i < mesh1.size(); i++){
+		for (int j = 0; j < mesh2.size(); j++){
+
+			if ((mesh1[i].maxX >= mesh2[j].maxX) && (mesh1[i].maxX <= mesh2[j].maxX)) {
+				flagX = true;
+			}
+			if ((mesh1[i].maxY >= mesh2[j].maxY) && (mesh1[i].maxY <= mesh2[j].maxY)) {
+				flagY = true;
+			}
+			if ((mesh1[i].maxZ >= mesh2[j].maxZ) && (mesh1[i].maxZ <= mesh2[j].maxZ)) {
+				flagZ = true;
+			}
+		}
 	}
-	if ((obj1->getModel().meshes[0].maxY >= obj2->getModel().meshes[0].maxY) && (obj1->getModel().meshes[0].maxY <= obj2->getModel().meshes[1].maxY)) {
-		flagX = true;
-	}
-	if ((obj1->getModel().meshes[0].maxZ >= obj2->getModel().meshes[0].maxZ) && (obj1->getModel().meshes[0].maxZ <= obj2->getModel().meshes[1].maxZ)) {
-		flagX = true;
-	}
+
+	
 
 	/*if ((obj1->getArestas()[0].x >= obj2->getArestas()[0].x) && (obj1->getArestas()[0].x <= obj2->getArestas()[1].x))
 	{
@@ -46,7 +55,7 @@ bool Physics::isCollision(GameObject * obj1, GameObject * obj2) {
 		return true;
 	}
 
-	else return false;
+	return false;
 }
 
 bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
@@ -63,7 +72,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 		bool breakPlane = false;
 		bool inside_sphere = false;
 		bool inside_Binding_box = false;
-		x_max = obj2.getModel().meshes[i].maxX + point2.x;
+		x_max = obj2.getModel().meshes[i].maxX + point2.x;// operacao entre o position e a mesh
 		y_max = obj2.getModel().meshes[i].maxY + point2.y;
 		z_max = obj2.getModel().meshes[i].maxZ + point2.z;
 		x_min = obj2.getModel().meshes[i].minX + point2.x;
@@ -120,11 +129,12 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 						
 							inside_Binding_box = true;
 						
-				
 					}
 				}
 
 			}
+
+			isCollision(&obj1, &obj2);
 
 			if (planeDistance < 0)
 				planeDistance *= -1;

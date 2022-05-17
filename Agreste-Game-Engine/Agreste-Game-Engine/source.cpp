@@ -96,7 +96,7 @@ int main()
 	//adding objects in gameboard
 	GameBoard board(SCREEN_WIDTH, SCREEN_HEIGHT);
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
-	(*board.gameObjects[0]).setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+	(*board.gameObjects[0]).setPosition(glm::vec3(1.0f, 3.0f, 0.0f));
 	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0)); 
 	(*board.gameObjects[0]).unfix();
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
@@ -139,7 +139,7 @@ int main()
 		movePlayer(board);
 		
 		for (int i = 0; i < board.gameObjects.size(); i++)
-		{
+		{	// Broad Phase que vai fazer essas comparacoes (comparacoes com todos gameobjects) 
 			if (py.narrowPhase(*Player, (*board.gameObjects[i])))
 			{
 				(*Player).Move(py.normalResponse, deltaTime);
