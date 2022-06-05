@@ -255,9 +255,9 @@ void GameObject::drawStencil( GameBoard & board)
 	glm::mat4 model = glm::translate(board.getModel(), position);
 	glm::mat4 view = board.getView();
 	model = glm::translate(model, this->position);
-	glm::mat4 projection = board.getProjection();
+	glm::mat4 *projection = board.getProjection();
 	stencilShader.Use();
-	stencilShader.setMat4("projection", projection);
+	stencilShader.setMat4("projection", *projection);
 	stencilShader.setMat4("view", view);
 	stencilShader.setMat4("model", model);
 	stencilShader.setVec4("stencil", rawColor);

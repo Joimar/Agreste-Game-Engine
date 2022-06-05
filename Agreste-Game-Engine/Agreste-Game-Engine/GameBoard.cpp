@@ -71,7 +71,7 @@ void GameBoard::drawGameObjects()
 			
 		}
 	}
-	this->skyCube.draw(glm::mat4(glm::mat3((*this->getCamera()).GetViewMatrix())), this->getProjection());
+	this->skyCube.draw(glm::mat4(glm::mat3((*this->getCamera()).GetViewMatrix())), this->projection);
 }
 
 glm::mat4 GameBoard::getModel()
@@ -94,10 +94,15 @@ void GameBoard::setView(glm::mat4 view)
 	this->view = view;
 }
 
-glm::mat4 GameBoard::getProjection()
+glm::mat4 * GameBoard::getProjection()
 {
-	return this->projection;
+	return &projection;
 }
+
+//glm::mat4 GameBoard::getProjection()
+//{
+//	return this-> projection;
+//}
 
 void GameBoard::setProjection(glm::mat4 projection)
 {

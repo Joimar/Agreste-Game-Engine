@@ -28,7 +28,7 @@ public:
 	void setModel(glm::mat4 model);
 	glm::mat4 getView();
 	void setView(glm::mat4 view);
-	glm::mat4 getProjection();
+	glm::mat4 *getProjection();
 	void setProjection(glm::mat4 projection);
 	Camera * getCamera();
 	void setCamera(Camera * cam);

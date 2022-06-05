@@ -78,8 +78,8 @@ int main()
 	glfwSetCursorPosCallback(window, MouseCallback);
 	glfwSetJoystickCallback(joystick_callback);
 
-		
-	
+
+
 	// GLFW Options
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -97,7 +97,7 @@ int main()
 	GameBoard board(SCREEN_WIDTH, SCREEN_HEIGHT);
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
 	(*board.gameObjects[0]).setPosition(glm::vec3(1.0f, 3.0f, 0.0f));
-	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0)); 
+	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 	(*board.gameObjects[0]).unfix();
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
@@ -109,13 +109,13 @@ int main()
 	(*board.gameObjects[3]).setPosition(glm::vec3(0.0f, 6.0f, -25.0f));
 	(*board.gameObjects[3]).setStencilMode(true);
 
-	
+
 
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
 	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a câmera no mesmo lugar do player (blue flicking)
 	Physics py;
-	
+
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -137,7 +137,7 @@ int main()
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		movePlayer(board);
-		
+
 		for (int i = 0; i < board.gameObjects.size(); i++)
 		{	// Broad Phase que vai fazer essas comparacoes (comparacoes com todos gameobjects) 
 			if (py.narrowPhase(*Player, (*board.gameObjects[i])))
@@ -145,21 +145,21 @@ int main()
 				(*Player).Move(py.normalResponse, deltaTime);
 			}
 		}
-		
-		
 
-		
+
+
+
 		//(*board.gameObjects[0]).setPosition((*board.gameObjects[0]).getPosition() + movementBox);
 		//DoMovement();
 		joyPadTest(false);
-	
-		
+
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		
+
 	}
 
-	
+
 
 	// Terminate GLFW, clearing any resources allocated by GLFW.
 	glfwTerminate();
@@ -175,17 +175,14 @@ int main()
 	{
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 	}
-
 	if (keys[GLFW_KEY_S] || keys[GLFW_KEY_DOWN])
 	{
 		camera.ProcessKeyboard(BACKWARD, deltaTime);
 	}
-
 	if (keys[GLFW_KEY_A] || keys[GLFW_KEY_LEFT])
 	{
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	}
-
 	if (keys[GLFW_KEY_D] || keys[GLFW_KEY_RIGHT])
 	{
 		camera.ProcessKeyboard(RIGHT, deltaTime);
@@ -231,10 +228,10 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 	//camera.ProcessMouseMovement(xOffset, yOffset);
 }
 
-void joyPadTest(bool test) 
+void joyPadTest(bool test)
 {
 	int present = glfwJoystickPresent(GLFW_JOYSTICK_1);
-	if (1==present)
+	if (1 == present)
 	{
 		int axisCount;
 		const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axisCount);
@@ -308,7 +305,7 @@ void joyPadTest(bool test)
 			system("CLS");
 		}
 	}
-	
+
 }
 
 void movePlayer(GameBoard &board)
@@ -326,11 +323,11 @@ void movePlayer(GameBoard &board)
 			cout << "(" << (*cam).GetPosition().x << ", " << (*cam).GetPosition().y << ", " << (*cam).GetPosition().z << ")" << endl;
 			//(*board.getCamera()).processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
 		}
-												  
-		if(axes[0] > threshold || axes[0] < -threshold) //left x right
+
+		if (axes[0] > threshold || axes[0] < -threshold) //left x right
 			p1->processGamePadAxisMovement(RIGHT, axes[0], deltaTime);
-			
-		if (axes[2] > threshold || axes[2] < -threshold || axes[3]>threshold || axes[3] < -threshold) 
+
+		if (axes[2] > threshold || axes[2] < -threshold || axes[3]>threshold || axes[3] < -threshold)
 		{ //camera
 		//camera.ProcessMouseMovement(0.3*axes[2], -0.3*axes[3]);
 			(*p1).processGamePadAxisRotation(0.3*axes[2], -0.3*axes[3]);
@@ -338,7 +335,7 @@ void movePlayer(GameBoard &board)
 			//cout << "front-> (" << (*p1).getFront().x << "," << (*p1).getFront().y << "," << (*p1).getFront().z << ")" << endl;
 
 		}
-		if (axes[5] > -0.5f )
+		if (axes[5] > -0.5f)
 		{
 			board.distance_from_camera_to_player += 1;
 		}
@@ -352,11 +349,11 @@ void movePlayer(GameBoard &board)
 		{
 			glm::vec3 direction = (*p1).getUp();
 			direction *= 5;
-			(*p1).Move(direction, deltaTime*5);
+			(*p1).Move(direction, deltaTime * 5);
 			float y = (*p1).getPosition().y + 6.5f;
 			cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
-			
-			
+
+
 			/*cout << "--------------posicao -------------" << endl;
 			cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
 			cout << "--------------posicao -------------" << endl;
@@ -371,7 +368,7 @@ void movePlayer(GameBoard &board)
 			}
 			cout << "--------------fim -------------"<< endl;*/
 		}
-		
+
 
 	}
 }
@@ -386,6 +383,6 @@ void joystick_callback(int jid, int event)
 	}
 	else if (event == GLFW_DISCONNECTED)
 	{
-		cout  << " desconactado " << present;
+		cout << " desconactado " << present;
 	}
 }
