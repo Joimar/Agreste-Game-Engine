@@ -28,6 +28,7 @@ GameBoard::GameBoard(float ScreenWidth, float ScreenHeight) :
 	this->ScreenWidth = ScreenWidth;
 	this->ScreenHeight = ScreenHeight;
 	this->setModel(glm::mat4(1));
+	this->setModel(glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)));	// it's a bit too big for our scene, so scale it down
 	this->setProjection(glm::perspective((*camera).GetZoom(), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f));
 	this->setView((*camera).GetViewMatrix());
 	this->distance_from_camera_to_player = 4;
@@ -45,6 +46,10 @@ GameBoard::GameBoard(float ScreenWidth, float ScreenHeight) :
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+GameBoard::~GameBoard()
+{
+}
+
 void GameBoard::drawGameObjects()
 {
 	glClearColor(0.0, 0.0f, 1.0f, 1.0f);
@@ -55,9 +60,9 @@ void GameBoard::drawGameObjects()
 
 	this->setProjection(glm::perspective((*camera).GetZoom(), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f));
 	this->setView((*camera).GetViewMatrix());
-	this->setModel (glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f)));	// it's a bit too big for our scene, so scale it down
 	if (!this->gameObjects.empty())
 	{
+		//o memory leak vem desse trecho de código
 		for (size_t i = 0; i < this->gameObjects.size(); i++)
 		{
 			if (!(*this->gameObjects[i]).isStencilMode()) 

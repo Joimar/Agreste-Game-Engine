@@ -94,6 +94,7 @@ int main()
 	// Define the viewport dimensions
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	//adding objects in gameboard
+
 	GameBoard board(SCREEN_WIDTH, SCREEN_HEIGHT);
 	board.addGameObject("../Agreste-Game-Engine/images/cube.obj");
 	(*board.gameObjects[0]).setPosition(glm::vec3(1.0f, 3.0f, 0.0f));

@@ -23,6 +23,7 @@ public:
 	void thirdPersonCamera(GameObject obj, float distance);
 	vector<GameObject*> gameObjects;
 	GameBoard(float ScreenWidth, float ScreenHeight);
+	~GameBoard();
 	void drawGameObjects();
 	glm::mat4 getModel();
 	void setModel(glm::mat4 model);
