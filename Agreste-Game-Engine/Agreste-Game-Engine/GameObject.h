@@ -47,7 +47,7 @@ public:
 	void setRight(glm::vec3 right);
 	GLfloat getMoveSpeed();
 	void setMoveSpeed(GLfloat moveSpeed);
-	Shader getShader();
+	Shader *getShader();
 	bool isFixed();
 	void fix();
 	void unfix();

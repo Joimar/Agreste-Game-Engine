@@ -120,10 +120,11 @@ void GameObject::setMoveSpeed(GLfloat moveSpeed)
 
 
 
-Shader GameObject::getShader()
+Shader *GameObject::getShader()
 {
-	return this->shader;
+	return &shader;
 }
+
 
 bool GameObject::isFixed()
 {
