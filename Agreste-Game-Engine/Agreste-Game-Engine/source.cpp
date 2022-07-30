@@ -18,7 +18,7 @@
 #include "GameObject.h"
 #include "GameBoard.h"
 #include "Physics.h"
-
+#include "Drawer.h"
 #define threshold  0.5
 
 // Function prototypes
@@ -116,6 +116,8 @@ int main()
 	Camera * cam = board.getCamera();
 	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a câmera no mesmo lugar do player (blue flicking)
 	Physics py;
+
+	Drawer *desenhista = desenhista->GetInstance();
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))

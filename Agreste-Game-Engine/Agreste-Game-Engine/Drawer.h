@@ -1,7 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "GameBoard.h"
-#include<glm/glm.hpp>
+#include <vector>
+#include <glm/glm.hpp>
 class Drawer
 {
 protected:
@@ -17,6 +18,11 @@ protected:
 
 		static Drawer *GetInstance();
 		void draw(GameObject & object, GameBoard & board);
+		void drawAllObjects(GameBoard & board);
+		void drawSkybox(GameBoard & board, Cubemap & skybox);
+		void drawStancil(GameBoard & board, GameObject & object);
+		void drawSkybox(Cubemap & skybox);
+		void drawScene(GameBoard & board, Cubemap & skybox);
 	
 };
 
