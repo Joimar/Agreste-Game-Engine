@@ -53,7 +53,9 @@ void Drawer::drawAllObjects(GameBoard & board)
 					draw(*board.gameObjects[i], board);
 				}
 				//else lidar com os casos stencilmode
-				else {}
+				else {
+					drawStancil(board, *board.gameObjects[i]);
+				}
 			}
 		}
 	board.drawGameObjects();
