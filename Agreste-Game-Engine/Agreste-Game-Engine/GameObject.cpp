@@ -20,25 +20,6 @@ GameObject::GameObject(string const & objPath, const GLchar *vertexShaderPath, c
 	updateVectors();
 }
 
-void GameObject::draw(GameBoard & board)
-{
-	/*a gente precisa modelar model, view e projection para fornecer ao Shader do objeto
-	primeiro a gente translada o model da board para a posição do objeto a ser desenhado
-	a view é definida pela view matrix vinda da camera
-	depois o model passa por uma segunda translaçao*/
-
-	glm::mat4 model = glm::translate(board.getModel(), position);
-	glm::mat4 view = (*board.getCamera()).GetViewMatrix();
-	model = glm::translate(model, position);
-	GLfloat Yaw = glm::radians(this->yaw);
-	model = glm::rotate(model, Yaw, glm::vec3(0.0f,1.0f,0.0f));
-	glm::mat4 projection = glm::perspective(glm::radians((*board.getCamera()).GetZoom()), (float)board.getScreenWidth() / (float)board.getScreenHeight(), 0.1f, 100.0f);
-	this->shader.Use();
-	this->shader.setMat4("projection", projection);
-	this->shader.setMat4("view", view);
-	this->shader.setMat4("model", model);
-	this->model.Draw(this->shader);
-}
 
 
 glm::vec3 GameObject::getPosition()
@@ -254,19 +235,4 @@ void GameObject::updateVectors()
 }
 
 
-
-void GameObject::drawStencil( GameBoard & board)
-{
-	Shader stencilShader("stencil.vs", "stencil.fs");
-	glm::mat4 model = glm::translate(board.getModel(), position);
-	glm::mat4 view = board.getView();
-	model = glm::translate(model, this->position);
-	glm::mat4 *projection = board.getProjection();
-	stencilShader.Use();
-	stencilShader.setMat4("projection", *projection);
-	stencilShader.setMat4("view", view);
-	stencilShader.setMat4("model", model);
-	stencilShader.setVec4("stencil", rawColor);
-	this->model.Draw(this->shader);
-}
 

@@ -2,14 +2,14 @@
 #include<glm/glm.hpp>
 #include "Shader.h"
 #include "Model.h"
-#include "GameBoard.h"
+//#include "GameBoard.h"
 #include "CameraMovement.h"
 
 constexpr auto threshold = 0.5;
 
 using namespace std;
 
-class GameBoard;
+//class GameBoard;
 
 class GameObject
 {
@@ -34,7 +34,7 @@ protected:
 public:
 	GameObject(string const & objPath, const GLchar *vertexShaderPath = "model_loading.vs", const GLchar *fragmentShaderPath = "model_loading.fs");
 
-	void draw( GameBoard & board);
+	//void draw( GameBoard & board);
 	glm::vec3 getPosition();
 	void setPosition(glm::vec3 position);
 	glm::vec3 getFront();
@@ -57,7 +57,7 @@ public:
 	void setStencilMode(bool mode);
 	glm::vec4 getRawColor();
 	void setRawColor(glm::vec4 color);
-	void drawStencil( GameBoard & board);
+	//void drawStencil( GameBoard & board);
 	virtual void processGamePadAxisMovement(Camera_Movement direction ,float axisValue, float deltaTime);
 	virtual void processGamePadAxisRotation(GLfloat xOffset, GLfloat yOffset, GLboolean constrainPitch = true);
 	Model getModel();

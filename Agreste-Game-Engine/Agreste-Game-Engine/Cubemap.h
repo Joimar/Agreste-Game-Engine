@@ -22,7 +22,7 @@ public:
 	void setTextureID(unsigned int texId);
 	void setSkyboxVAO(unsigned int vaoId);
 	void setSkyboxVBO(unsigned int vboId);
-
+	Shader* getShader();
 private:
 	unsigned int skyboxVAO, skyboxVBO;
 	unsigned int textureID;

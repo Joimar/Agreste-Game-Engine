@@ -73,6 +73,11 @@ void Cubemap::setSkyboxVBO(unsigned int vboId)
 	skyboxVBO = vboId;
 }
 
+Shader* Cubemap::getShader()
+{
+	return &shader;
+}
+
 void Cubemap::loadCubeMap(std::vector<std::string> faces)
 {
 	

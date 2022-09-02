@@ -135,8 +135,11 @@ int main()
 
 		py.gravityForce(board.gameObjects, deltaTime);
 		board.thirdPersonCamera((*board.gameObjects[0]), board.distance_from_camera_to_player);
-		board.drawGameObjects();//se não tiver game objects ele desenha o skybox sozinho
-
+		
+		//TESTE
+		//board.drawGameObjects();//se não tiver game objects ele desenha o skybox sozinho
+		Cubemap skycube = board.getSkyCube();
+		desenhista->drawScene(board, skycube);
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		movePlayer(board);

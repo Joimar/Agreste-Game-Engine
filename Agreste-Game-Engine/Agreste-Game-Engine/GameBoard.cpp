@@ -50,34 +50,7 @@ GameBoard::~GameBoard()
 {
 }
 
-void GameBoard::drawGameObjects()
-{
-	glClearColor(0.0, 0.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	glStencilMask(0xFF);
-
-	this->setProjection(glm::perspective((*camera).GetZoom(), (GLfloat)ScreenWidth / (GLfloat)ScreenHeight, 0.1f, 100.0f));
-	this->setView((*camera).GetViewMatrix());
-	if (!this->gameObjects.empty())
-	{
-		//o memory leak vem desse trecho de código
-		for (size_t i = 0; i < this->gameObjects.size(); i++)
-		{
-			if (!(*this->gameObjects[i]).isStencilMode()) 
-			{
-				(*this->gameObjects[i]).draw(*this);
-			}
-			else 
-			{
-				(*this->gameObjects[i]).drawStencil(*this);
-			}
-			
-		}
-	}
-	this->skyCube.draw(glm::mat4(glm::mat3((*this->getCamera()).GetViewMatrix())), this->projection);
-}
 
 glm::mat4 GameBoard::getModel()
 {
