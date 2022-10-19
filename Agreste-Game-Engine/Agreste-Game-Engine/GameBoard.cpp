@@ -2,22 +2,13 @@
 
 void GameBoard::thirdPersonCamera(GameObject obj, float distance)
 {
-	if (distance<0)
-	{
-		distance = 0;
-	}
-	float x, y, z;
-	float r_yaw, r_pitch;
-	r_yaw = glm::radians(obj.getYaw());
-	r_pitch = glm::radians(obj.getPitch());
-	x =  obj.getPosition().x + distance * glm::cos(r_yaw);
-	z = obj.getPosition().z - distance * glm::sin(r_yaw);
-	y = obj.getPosition().y + distance * glm::cos(r_pitch);
-	glm::vec3 newFront = this->camera->GetFront() + obj.getPosition();
-	this->camera->setPosition(glm::vec3(x, y, z));
-	this->camera->setFront(newFront);
+	// Set camera behind object
+	this->camera->setPosition(obj.getPosition() + glm::vec3(0, 3, 10));
 	
-
+	// Get vector from camera to object and make camera point to that vector
+	// This is similar to camera.lookAt(obj)
+	auto forward = obj.getPosition() - camera->GetPosition();
+	this->camera->setFront(forward);
 }
 
 
