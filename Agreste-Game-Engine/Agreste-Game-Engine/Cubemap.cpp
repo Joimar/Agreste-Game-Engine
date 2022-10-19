@@ -1,5 +1,7 @@
 #include "Cubemap.h"
 
+#include <set>
+
 Cubemap::Cubemap(std::string path):
 	textureID(0),
 	shader("skybox.vs", "skybox.fs")
@@ -35,12 +37,14 @@ void Cubemap::draw(glm::mat4 View, glm::mat4 Projection)
 
 std::vector<std::string> Cubemap::getFacePaths(std::string path)
 {
-	std::vector<std::string> aux;
-	for (const auto & entry : fs::directory_iterator(path))
-	{
-		aux.push_back(entry.path().string());
-	}
-	return aux;
+  std::set<fs::path> sorted_by_name;
+  for (const auto& entry : fs::directory_iterator(path))
+    sorted_by_name.insert(entry.path());
+
+  std::vector<std::string> aux;
+  for (const auto& entry : sorted_by_name) aux.push_back(entry.string());
+
+  return aux;
 }
 
 unsigned int Cubemap::getTextureID()
