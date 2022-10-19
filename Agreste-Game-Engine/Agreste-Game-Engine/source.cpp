@@ -7,7 +7,7 @@
 // GLFW
 #include <GLFW/glfw3.h>
 // Other Libs
-#include "SOIL2/SOIL2.h"
+#include "SOIL2.h"
 // GLM Mathematics
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -100,7 +100,7 @@ int main()
 	(*board.gameObjects[0]).setPosition(glm::vec3(1.0f, 3.0f, 0.0f));
 	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 	(*board.gameObjects[0]).unfix();
-	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma está mais distante na visualização
+	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma estï¿½ mais distante na visualizaï¿½ï¿½o
 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
 	(*board.gameObjects[1]).setStencilMode(true);
 	/*board.addGameObject("../Agreste-Game-Engine/platform.obj");
@@ -114,7 +114,7 @@ int main()
 
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
-	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a câmera no mesmo lugar do player (blue flicking)
+	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a cï¿½mera no mesmo lugar do player (blue flicking)
 	Physics py;
 
 	Drawer *desenhista = desenhista->GetInstance();
@@ -137,7 +137,7 @@ int main()
 		board.thirdPersonCamera((*board.gameObjects[0]), board.distance_from_camera_to_player);
 		
 		//TESTE
-		//board.drawGameObjects();//se não tiver game objects ele desenha o skybox sozinho
+		//board.drawGameObjects();//se nï¿½o tiver game objects ele desenha o skybox sozinho
 		Cubemap skycube = board.getSkyCube();
 		desenhista->drawScene(board, skycube);
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions

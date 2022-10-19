@@ -1,5 +1,5 @@
 #include "Model.h"
-#include<SOIL2/SOIL2.h>
+#include<SOIL2.h>
 
 unsigned int TextureFromFile(const char * path, const string & directory, bool gamma)
 {

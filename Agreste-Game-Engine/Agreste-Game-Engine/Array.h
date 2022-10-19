@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <stddef.h>
 template<typename T>
 class Array: public std::vector<T>
 {

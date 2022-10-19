@@ -1,10 +1,10 @@
 #pragma once
 #include<iostream>
 #include<glm/glm.hpp>
-#include<gl/glew.h>
+#include<GL/glew.h>
 #include<string>
 #include<vector>
-#include<SOIL2/SOIL2.h>
+#include<SOIL2.h>
 #include<experimental/filesystem>
 #include "Shader.h"
 
