@@ -14,7 +14,7 @@ public:
 	Physics();
 	//returns true if the object 1 is coliding with object 2, obj1 is the referential
 	bool broadPhase();
-	bool isCollision(GameObject * obj1, GameObject * obj2);
+	bool isCollision(vector<GameObject*> &objList);
 	int findHighestVarianceAxis();
 	
 	bool narrowPhase(GameObject obj1, GameObject obj2);

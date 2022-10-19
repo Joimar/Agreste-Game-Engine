@@ -13,27 +13,127 @@ bool Physics::broadPhase() // testes com sort and sweep
 	return false;
 }
 
-bool Physics::isCollision(GameObject * obj1, GameObject * obj2) {
-	bool flagX = false;
-	bool flagY = false;
-	bool flagZ = false;
-	std::vector<Mesh> mesh1 = obj1->getModel().meshes;
-	std::vector<Mesh> mesh2 = obj2->getModel().meshes;
+bool Physics::isCollision(vector<GameObject*> &objList) {
+	
+	//lista de todos os pares ,lista de pares provaveis fazer comparacao de xmax e xmin
+	//std::vector<Mesh> mesh1 = obj1->getModel().meshes;
+	//std::vector<Mesh> mesh2 = obj2->getModel().meshes;
 
-	for (int i = 0; i < mesh1.size(); i++){
+	//glm::vec3 point1 = obj1->getPosition();
+	//glm::vec3 point2 = obj2->getPosition();
+
+	
+	
+	vector<vector<int>> allPairs;
+
+	for (int i = 0; i < objList.size(); i++) {
+		
+		for (int j = i + 1; j < objList.size(); j++) {
+			vector<int> vecAux;
+			//paiir<int, int> vecAuxPair;
+			//cAuxPair.first = i;
+	
+			vecAux.push_back(i);
+			//if (j > i) 
+			{
+				vecAux.push_back(j);
+				allPairs.push_back(vecAux);
+			}
+			
+		}
+	}
+
+	for (int i = 0; i < allPairs.size(); i++) 
+	{
+		/*float x_maxObj1, y_maxObj1, z_maxObj1;
+		float x_maxObj2, y_maxObj2, z_maxObj2;
+
+		float x_minObj1, y_minObj1, z_minObj1;
+		float x_minObj2, y_minObj2, z_minObj2;*/
+	
+		bool flagX = false;
+		bool flagY = false;
+		bool flagZ = false;
+
+		GameObject *obj1, *obj2;
+		obj1 = objList[allPairs[i][0]];
+		obj2 = objList[allPairs[i][1]];
+
+		glm::vec3 point1 = obj1->getPosition();
+		glm::vec3 point2 = obj2->getPosition();
+
+			
+		//calculando maximos obj1
+		float x_maxObj1 = obj1->getModel().meshes[0].maxX + point1.x;// operacao entre o position e a mesh
+		float y_maxObj1 = obj1->getModel().meshes[0].maxY + point1.y;
+		float z_maxObj1 = obj1->getModel().meshes[0].maxZ + point1.z;
+		//calculando maximos obj2
+		float x_maxObj2 = obj2->getModel().meshes[0].maxX + point2.x;// operacao entre o position e a mesh
+		float y_maxObj2 = obj2->getModel().meshes[0].maxY + point2.y;
+		float z_maxObj2 = obj2->getModel().meshes[0].maxZ + point2.z;
+		//calculando mínimos obj1
+		float x_minObj1 = obj1->getModel().meshes[0].minX + point1.x;// operacao entre o position e a mesh
+		float y_minObj1 = obj1->getModel().meshes[0].minY + point1.y;
+		float z_minObj1 = obj1->getModel().meshes[0].minZ + point1.z;
+		//calculando mínimos obj2
+		float x_minObj2 = obj2->getModel().meshes[0].minX + point2.x;// operacao entre o position e a mesh
+		float y_minObj2 = obj2->getModel().meshes[0].minY + point2.y;
+		float z_minObj2 = obj2->getModel().meshes[0].minZ + point2.z;
+
+		if ( (x_minObj1 >= x_maxObj2) || (x_maxObj1 <= x_minObj2) ) 
+			flagX = true;
+		
+		if ( (y_minObj1 >= y_maxObj2) || (y_maxObj1 <= y_minObj2) )  
+			flagY = true;
+		
+		if ((z_minObj1 >= z_maxObj2) || (z_maxObj1 <= z_minObj2))
+			flagZ = true;
+		
+
+		//if ((flagX == false) && (flagY == false) && (flagZ == false) ) {
+		if( !(flagX || flagY || flagZ) ){
+		//inserir cout aqui para ver os falores das flags e outras variáveis
+			//allPairs.erase(allPairs.begin() + i);
+			if (!allPairs.empty()) std::cout << "()Colidiu()" << std::endl;
+		//	narrowPhase(*obj1, *obj2);
+		} 
+
+		
+	}
+
+	//if(!allPairs.empty()) std::cout << "teste" << std::endl;
+
+	/*for (int i = 0; i < mesh1.size(); i++){
+
 		for (int j = 0; j < mesh2.size(); j++){
 
-			if ((mesh1[i].maxX >= mesh2[j].maxX) && (mesh1[i].maxX <= mesh2[j].maxX)) {
+			x_maxObj1 = obj1->getModel().meshes[i].maxX + point1.x;// operacao entre o position e a mesh
+			y_maxObj1 = obj1->getModel().meshes[i].maxY + point1.y;
+			z_maxObj1 = obj1->getModel().meshes[i].maxZ + point1.z;
+
+			x_maxObj2 = obj2->getModel().meshes[i].maxX + point2.x;// operacao entre o position e a mesh
+			y_maxObj2 = obj2->getModel().meshes[i].maxY + point2.y;
+			z_maxObj2 = obj2->getModel().meshes[i].maxZ + point2.z;
+
+			x_minObj1 = obj1->getModel().meshes[i].maxX + point1.x;// operacao entre o position e a mesh
+			y_minObj1 = obj1->getModel().meshes[i].maxX + point1.y;
+			z_minObj1 = obj1->getModel().meshes[i].maxX + point1.z;
+
+			x_minObj2 = obj1->getModel().meshes[i].maxX + point2.x;// operacao entre o position e a mesh
+			y_minObj2 = obj1->getModel().meshes[i].maxX + point2.y;
+			z_minObj2 = obj1->getModel().meshes[i].maxX + point2.z;
+			
+			if ((x_maxObj1 <= x_maxObj2) && (x_minObj1 >= x_minObj2)) {
 				flagX = true;
 			}
-			if ((mesh1[i].maxY >= mesh2[j].maxY) && (mesh1[i].maxY <= mesh2[j].maxY)) {
+			if ((y_maxObj1 <= y_maxObj2) && (y_minObj1 >= y_minObj2)) {
 				flagY = true;
 			}
-			if ((mesh1[i].maxZ >= mesh2[j].maxZ) && (mesh1[i].maxZ <= mesh2[j].maxZ)) {
+			if ((z_maxObj1 <= z_maxObj2) && (z_minObj1 >= z_minObj2)) {
 				flagZ = true;
 			}
 		}
-	}
+	}*/
 
 	
 
@@ -50,10 +150,11 @@ bool Physics::isCollision(GameObject * obj1, GameObject * obj2) {
 		flagZ = true;
 	}*/
 
-	if ((flagX == true) && (flagY == true) && (flagZ == true)){ 
+	/*if ((flagX == true) && (flagY == true) && (flagZ == true)){ 
 		std::cout << "Colidiu" << std::endl;
+
 		return true;
-	}
+	}*/
 
 	return false;
 }
@@ -122,7 +223,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 			//analise de colisão eixo a eixo
 			if (x_min < point.x && point.x < x_max)
 			{
-				if (y_min < point.y && point.y < y_max + 0.5 )
+				if (y_min < point.y && point.y < y_max + 0.5)// pq 0.5 no Y?
 				{
 					if (z_min < point.z && point.z < z_max) 
 					{
@@ -134,7 +235,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 
 			}
 
-			isCollision(&obj1, &obj2);
+			//isCollision(&obj1, &obj2);
 
 			if (planeDistance < 0)
 				planeDistance *= -1;

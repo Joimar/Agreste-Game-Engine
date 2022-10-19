@@ -100,15 +100,15 @@ int main()
 	(*board.gameObjects[0]).setPosition(glm::vec3(1.0f, 3.0f, 0.0f));
 	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 	(*board.gameObjects[0]).unfix();
-	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma está mais distante na visualização
 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
 	(*board.gameObjects[1]).setStencilMode(true);
-	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+	/*board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[2]).setPosition(glm::vec3(0.0f, 4.0f, -20.0f));
 	(*board.gameObjects[2]).setStencilMode(true);
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[3]).setPosition(glm::vec3(0.0f, 6.0f, -25.0f));
-	(*board.gameObjects[3]).setStencilMode(true);
+	(*board.gameObjects[3]).setStencilMode(true);*/
 
 
 
@@ -144,13 +144,20 @@ int main()
 		glfwPollEvents();
 		movePlayer(board);
 
-		for (int i = 0; i < board.gameObjects.size(); i++)
+		/*for (int i = 0; i < board.gameObjects.size(); i++)
 		{	// Broad Phase que vai fazer essas comparacoes (comparacoes com todos gameobjects) 
 			if (py.narrowPhase(*Player, (*board.gameObjects[i])))
 			{
 				(*Player).Move(py.normalResponse, deltaTime);
+				py.isCollision(Player, board.gameObjects[i]);
 			}
+		} */
+		if (board.gameObjects[0]->getPosition().x > 5.0f) {
+			cout << "AQUI" << endl;
 		}
+		py.isCollision(board.gameObjects);
+
+	//	cout << "( " << board.gameObjects[0]->getPosition().x << ", " << board.gameObjects[0]->getPosition().y << ", " << board.gameObjects[0]->getPosition().z << " )" << endl;
 
 
 
@@ -326,7 +333,7 @@ void movePlayer(GameBoard &board)
 
 		if (axes[1] > threshold || axes[1] < -threshold) {//front x back
 			p1->processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
-			cout << "(" << (*cam).GetPosition().x << ", " << (*cam).GetPosition().y << ", " << (*cam).GetPosition().z << ")" << endl;
+			//cout << "(" << (*cam).GetPosition().x << ", " << (*cam).GetPosition().y << ", " << (*cam).GetPosition().z << ")" << endl;
 			//(*board.getCamera()).processGamePadAxisMovement(FORWARD, axes[1], deltaTime);
 		}
 
@@ -357,7 +364,7 @@ void movePlayer(GameBoard &board)
 			direction *= 5;
 			(*p1).Move(direction, deltaTime * 5);
 			float y = (*p1).getPosition().y + 6.5f;
-			cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
+			//cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
 
 
 			/*cout << "--------------posicao -------------" << endl;
