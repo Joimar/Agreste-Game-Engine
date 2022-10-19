@@ -31,12 +31,10 @@ void GameObject::setPosition(glm::vec3 position)
 {
 	
 	this->position = position;
-	getModel().meshes[0].maxY = 5.0f;
-	std::cout << "Meshes: " << getModel().meshes[0].maxY <<std::endl;
 	for (int i = 0; i < this->getModel().meshes.size(); i++) {
-		//As atribuições para atualizar os meshes SIMPLESMENTE NÃO FUNCIONAM. OS VALORES NÃO MUDAM. E AGORA, BOSTIL?! 
+		//As atribuiï¿½ï¿½es para atualizar os meshes SIMPLESMENTE Nï¿½O FUNCIONAM. OS VALORES Nï¿½O MUDAM. E AGORA, BOSTIL?! 
 		this->getModel().meshes[i].maxX += position.x;
-		this->getModel().meshes[i].maxY = 5.0f;//this->getModel().meshes[i].maxY + position.y;
+		this->getModel().meshes[i].maxY += position.y;
 		this->getModel().meshes[i].maxZ += position.z;
 
 		this->getModel().meshes[i].minX += position.x;
