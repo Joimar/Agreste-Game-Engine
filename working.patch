@@ -1,0 +1,351 @@
+From 4f5586938530c8e72d6c5ac220de2538fc047d40 Mon Sep 17 00:00:00 2001
+From: Jairo Calmon <jairo.calmon@admobilize.com>
+Date: Wed, 19 Oct 2022 14:50:26 -0300
+Subject: [PATCH 1/5] Add support for linux
+
+---
+ .gitignore                                    |  1 +
+ .../Agreste-Game-Engine.vcxproj               |  4 +--
+ .../Agreste-Game-Engine/Array.h               |  1 +
+ .../Agreste-Game-Engine/CMakeLists.txt        | 33 +++++++++++++++++++
+ .../Agreste-Game-Engine/Cubemap.h             |  4 +--
+ .../Agreste-Game-Engine/Model.cpp             |  2 +-
+ .../Agreste-Game-Engine/source.cpp            |  8 ++---
+ 7 files changed, 44 insertions(+), 9 deletions(-)
+ create mode 100644 Agreste-Game-Engine/Agreste-Game-Engine/CMakeLists.txt
+
+diff --git a/.gitignore b/.gitignore
+index e16fd82b..00677d0b 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -8,3 +8,4 @@ Agreste-Game-Engine/.vs/Agreste-Game-Engine/v15/Browse.VC.db
+ Agreste-Game-Engine/.vs/Agreste-Game-Engine/v15/.suo
+ 
+ *.ipch
++build
+\ No newline at end of file
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/Agreste-Game-Engine.vcxproj b/Agreste-Game-Engine/Agreste-Game-Engine/Agreste-Game-Engine.vcxproj
+index 8d298d42..2223204e 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/Agreste-Game-Engine.vcxproj
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/Agreste-Game-Engine.vcxproj
+@@ -76,7 +76,7 @@
+       <Optimization>Disabled</Optimization>
+       <SDLCheck>true</SDLCheck>
+       <ConformanceMode>true</ConformanceMode>
+-      <AdditionalIncludeDirectories>$(SolutionDir)/Dependencies/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir)/Dependencies/includes;$(SolutionDir)/Dependencies/includes/SOIL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ClCompile>
+     <Link>
+       <AdditionalLibraryDirectories>$(SolutionDir)/Dependencies/libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+@@ -89,7 +89,7 @@
+       <Optimization>Disabled</Optimization>
+       <SDLCheck>true</SDLCheck>
+       <ConformanceMode>true</ConformanceMode>
+-      <AdditionalIncludeDirectories>$(SolutionDir)/Dependencies/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(SolutionDir)/Dependencies/includes;$(SolutionDir)/Dependencies/includes/SOIL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/Array.h b/Agreste-Game-Engine/Agreste-Game-Engine/Array.h
+index 0840fd9f..f1e4906d 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/Array.h
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/Array.h
+@@ -1,5 +1,6 @@
+ #pragma once
+ #include <vector>
++#include <stddef.h>
+ template<typename T>
+ class Array: public std::vector<T>
+ {
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/CMakeLists.txt b/Agreste-Game-Engine/Agreste-Game-Engine/CMakeLists.txt
+new file mode 100644
+index 00000000..770f6057
+--- /dev/null
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/CMakeLists.txt
+@@ -0,0 +1,33 @@
++project("agreste-game-engine")
++cmake_minimum_required(VERSION 3.22)
++
++find_package(GLEW REQUIRED)
++find_package(glm REQUIRED)
++find_package(glfw3 REQUIRED)
++find_library(SOIL2 soil2)
++
++add_executable(agreste-game-engine
++  Array.cpp
++  Camera.cpp
++  Cubemap.cpp
++  Drawer.cpp
++  GameBoard.cpp
++  GameObject.cpp
++  Mesh.cpp
++  Model.cpp
++  Physics.cpp
++  Player.cpp
++  shader.cpp
++  source.cpp
++  World.cpp
++)
++
++set_property(TARGET agreste-game-engine PROPERTY CXX_STANDARD 17)
++
++target_link_libraries(agreste-game-engine GLEW::GLEW)
++target_link_libraries(agreste-game-engine glm::glm)
++target_link_libraries(agreste-game-engine glfw)
++target_link_libraries(agreste-game-engine GL)
++target_link_libraries(agreste-game-engine ${SOIL2})
++target_link_libraries(agreste-game-engine assimp)
++target_link_libraries(agreste-game-engine -lstdc++fs)
+\ No newline at end of file
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/Cubemap.h b/Agreste-Game-Engine/Agreste-Game-Engine/Cubemap.h
+index c6699128..d2fee61d 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/Cubemap.h
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/Cubemap.h
+@@ -1,10 +1,10 @@
+ #pragma once
+ #include<iostream>
+ #include<glm/glm.hpp>
+-#include<gl/glew.h>
++#include<GL/glew.h>
+ #include<string>
+ #include<vector>
+-#include<SOIL2/SOIL2.h>
++#include<SOIL2.h>
+ #include<experimental/filesystem>
+ #include "Shader.h"
+ 
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/Model.cpp b/Agreste-Game-Engine/Agreste-Game-Engine/Model.cpp
+index 6c776997..28d511f0 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/Model.cpp
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/Model.cpp
+@@ -1,5 +1,5 @@
+ #include "Model.h"
+-#include<SOIL2/SOIL2.h>
++#include<SOIL2.h>
+ 
+ unsigned int TextureFromFile(const char * path, const string & directory, bool gamma)
+ {
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/source.cpp b/Agreste-Game-Engine/Agreste-Game-Engine/source.cpp
+index 3f852004..95116852 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/source.cpp
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/source.cpp
+@@ -7,7 +7,7 @@
+ // GLFW
+ #include <GLFW/glfw3.h>
+ // Other Libs
+-#include "SOIL2/SOIL2.h"
++#include "SOIL2.h"
+ // GLM Mathematics
+ #include <glm/glm.hpp>
+ #include <glm/gtc/matrix_transform.hpp>
+@@ -100,7 +100,7 @@ int main()
+ 	(*board.gameObjects[0]).setPosition(glm::vec3(1.0f, 3.0f, 0.0f));
+ 	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
+ 	(*board.gameObjects[0]).unfix();
+-	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma está mais distante na visualização
++	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma estï¿½ mais distante na visualizaï¿½ï¿½o
+ 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
+ 	(*board.gameObjects[1]).setStencilMode(true);
+ 	/*board.addGameObject("../Agreste-Game-Engine/platform.obj");
+@@ -114,7 +114,7 @@ int main()
+ 
+ 	GameObject * Player = board.gameObjects[0];
+ 	Camera * cam = board.getCamera();
+-	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a câmera no mesmo lugar do player (blue flicking)
++	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a cï¿½mera no mesmo lugar do player (blue flicking)
+ 	Physics py;
+ 
+ 	Drawer *desenhista = desenhista->GetInstance();
+@@ -137,7 +137,7 @@ int main()
+ 		board.thirdPersonCamera((*board.gameObjects[0]), board.distance_from_camera_to_player);
+ 		
+ 		//TESTE
+-		//board.drawGameObjects();//se não tiver game objects ele desenha o skybox sozinho
++		//board.drawGameObjects();//se nï¿½o tiver game objects ele desenha o skybox sozinho
+ 		Cubemap skycube = board.getSkyCube();
+ 		desenhista->drawScene(board, skycube);
+ 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
+-- 
+2.34.1
+
+
+From 066fbe0d6b03bff863c5e8c15dd11b9fc8d2e494 Mon Sep 17 00:00:00 2001
+From: Jairo Calmon <jairo.calmon@admobilize.com>
+Date: Wed, 19 Oct 2022 15:00:21 -0300
+Subject: [PATCH 2/5] Fix cubemap on linux by ordering files
+
+---
+ .../Agreste-Game-Engine/Cubemap.cpp              | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/Cubemap.cpp b/Agreste-Game-Engine/Agreste-Game-Engine/Cubemap.cpp
+index 55c80e0a..a9afc2f8 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/Cubemap.cpp
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/Cubemap.cpp
+@@ -1,5 +1,7 @@
+ #include "Cubemap.h"
+ 
++#include <set>
++
+ Cubemap::Cubemap(std::string path):
+ 	textureID(0),
+ 	shader("skybox.vs", "skybox.fs")
+@@ -35,12 +37,14 @@ void Cubemap::draw(glm::mat4 View, glm::mat4 Projection)
+ 
+ std::vector<std::string> Cubemap::getFacePaths(std::string path)
+ {
+-	std::vector<std::string> aux;
+-	for (const auto & entry : fs::directory_iterator(path))
+-	{
+-		aux.push_back(entry.path().string());
+-	}
+-	return aux;
++  std::set<fs::path> sorted_by_name;
++  for (const auto& entry : fs::directory_iterator(path))
++    sorted_by_name.insert(entry.path());
++
++  std::vector<std::string> aux;
++  for (const auto& entry : sorted_by_name) aux.push_back(entry.string());
++
++  return aux;
+ }
+ 
+ unsigned int Cubemap::getTextureID()
+-- 
+2.34.1
+
+
+From 766401b8a6a444ed9e7bd5cd412cf46409f3bd01 Mon Sep 17 00:00:00 2001
+From: Jairo Calmon <jairo.calmon@admobilize.com>
+Date: Wed, 19 Oct 2022 15:01:05 -0300
+Subject: [PATCH 3/5] Remove hardcoded tests
+
+---
+ Agreste-Game-Engine/Agreste-Game-Engine/GameObject.cpp | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/GameObject.cpp b/Agreste-Game-Engine/Agreste-Game-Engine/GameObject.cpp
+index 30295220..0d2906d2 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/GameObject.cpp
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/GameObject.cpp
+@@ -31,12 +31,10 @@ void GameObject::setPosition(glm::vec3 position)
+ {
+ 	
+ 	this->position = position;
+-	getModel().meshes[0].maxY = 5.0f;
+-	std::cout << "Meshes: " << getModel().meshes[0].maxY <<std::endl;
+ 	for (int i = 0; i < this->getModel().meshes.size(); i++) {
+-		//As atribuições para atualizar os meshes SIMPLESMENTE NÃO FUNCIONAM. OS VALORES NÃO MUDAM. E AGORA, BOSTIL?! 
++		//As atribuiï¿½ï¿½es para atualizar os meshes SIMPLESMENTE Nï¿½O FUNCIONAM. OS VALORES Nï¿½O MUDAM. E AGORA, BOSTIL?! 
+ 		this->getModel().meshes[i].maxX += position.x;
+-		this->getModel().meshes[i].maxY = 5.0f;//this->getModel().meshes[i].maxY + position.y;
++		this->getModel().meshes[i].maxY += position.y;
+ 		this->getModel().meshes[i].maxZ += position.z;
+ 
+ 		this->getModel().meshes[i].minX += position.x;
+-- 
+2.34.1
+
+
+From 3a170ef243897b57698d7a61c1cf73a07f31e55c Mon Sep 17 00:00:00 2001
+From: Jairo Calmon <jairo.calmon@admobilize.com>
+Date: Wed, 19 Oct 2022 15:04:03 -0300
+Subject: [PATCH 4/5] Remove duplicated translate and adjust camera
+
+---
+ .../Agreste-Game-Engine/Drawer.cpp            |  4 ----
+ .../Agreste-Game-Engine/GameBoard.cpp         | 21 ++++++-------------
+ 2 files changed, 6 insertions(+), 19 deletions(-)
+
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/Drawer.cpp b/Agreste-Game-Engine/Agreste-Game-Engine/Drawer.cpp
+index cba606f9..acace819 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/Drawer.cpp
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/Drawer.cpp
+@@ -18,9 +18,6 @@ void Drawer::draw(GameObject & object, GameBoard & board)
+ {
+ 	glm::mat4 model = glm::translate(board.getModel(), object.getPosition());
+ 	glm::mat4 view = (*board.getCamera()).GetViewMatrix();
+-	model = glm::translate(model, object.getPosition());
+-	GLfloat Yaw = glm::radians(object.getYaw());
+-	model = glm::rotate(model, Yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+ 	glm::mat4 projection = glm::perspective(glm::radians((*board.getCamera()).GetZoom()), (float)board.getScreenWidth() / (float)board.getScreenHeight(), 0.1f, 100.0f);
+ 	
+ 	shader_ = object.getShader();
+@@ -102,7 +99,6 @@ void Drawer::drawStencil(GameBoard & board, GameObject & object)
+ 	
+ 	glm::mat4 model = glm::translate(board.getModel(), object.getPosition());
+ 	glm::mat4 view = board.getView();
+-	model = glm::translate(model, object.getPosition());
+ 	glm::mat4 *projection = board.getProjection();
+ 	stencilShader_->Use();
+ 	stencilShader_->setMat4("projection", *projection);
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/GameBoard.cpp b/Agreste-Game-Engine/Agreste-Game-Engine/GameBoard.cpp
+index 65996e40..ec64abce 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/GameBoard.cpp
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/GameBoard.cpp
+@@ -2,22 +2,13 @@
+ 
+ void GameBoard::thirdPersonCamera(GameObject obj, float distance)
+ {
+-	if (distance<0)
+-	{
+-		distance = 0;
+-	}
+-	float x, y, z;
+-	float r_yaw, r_pitch;
+-	r_yaw = glm::radians(obj.getYaw());
+-	r_pitch = glm::radians(obj.getPitch());
+-	x =  obj.getPosition().x + distance * glm::cos(r_yaw);
+-	z = obj.getPosition().z - distance * glm::sin(r_yaw);
+-	y = obj.getPosition().y + distance * glm::cos(r_pitch);
+-	glm::vec3 newFront = this->camera->GetFront() + obj.getPosition();
+-	this->camera->setPosition(glm::vec3(x, y, z));
+-	this->camera->setFront(newFront);
++	// Set camera behind object
++	this->camera->setPosition(obj.getPosition() + glm::vec3(0, 3, 10));
+ 	
+-
++	// Get vector from camera to object and make camera point to that vector
++	// This is similar to camera.lookAt(obj)
++	auto forward = obj.getPosition() - camera->GetPosition();
++	this->camera->setFront(forward);
+ }
+ 
+ 
+-- 
+2.34.1
+
+
+From 5a976568e5a0920c70f1ec5c84c1e6f16d11a91f Mon Sep 17 00:00:00 2001
+From: Jairo Calmon <jairo.calmon@admobilize.com>
+Date: Wed, 19 Oct 2022 15:04:32 -0300
+Subject: [PATCH 5/5] Enable other platforms
+
+---
+ Agreste-Game-Engine/Agreste-Game-Engine/source.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Agreste-Game-Engine/Agreste-Game-Engine/source.cpp b/Agreste-Game-Engine/Agreste-Game-Engine/source.cpp
+index 95116852..46904884 100644
+--- a/Agreste-Game-Engine/Agreste-Game-Engine/source.cpp
++++ b/Agreste-Game-Engine/Agreste-Game-Engine/source.cpp
+@@ -102,13 +102,13 @@ int main()
+ 	(*board.gameObjects[0]).unfix();
+ 	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma estï¿½ mais distante na visualizaï¿½ï¿½o
+ 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
+-	(*board.gameObjects[1]).setStencilMode(true);
+-	/*board.addGameObject("../Agreste-Game-Engine/platform.obj");
++	 (*board.gameObjects[1]).setStencilMode(true);
++	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+ 	(*board.gameObjects[2]).setPosition(glm::vec3(0.0f, 4.0f, -20.0f));
+ 	(*board.gameObjects[2]).setStencilMode(true);
+ 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+ 	(*board.gameObjects[3]).setPosition(glm::vec3(0.0f, 6.0f, -25.0f));
+-	(*board.gameObjects[3]).setStencilMode(true);*/
++	(*board.gameObjects[3]).setStencilMode(true);
+ 
+ 
+ 
+-- 
+2.34.1
+

@@ -95,7 +95,7 @@ bool Physics::isCollision(vector<GameObject*> &objList) {
 		//inserir cout aqui para ver os falores das flags e outras variáveis
 			//allPairs.erase(allPairs.begin() + i);
 			if (!allPairs.empty()) std::cout << "()Colidiu()" << std::endl;
-		//	narrowPhase(*obj1, *obj2);
+			narrowPhase(*obj1, *obj2);
 		} 
 
 		

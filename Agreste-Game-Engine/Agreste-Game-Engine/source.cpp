@@ -102,7 +102,7 @@ int main()
 	(*board.gameObjects[0]).unfix();
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma est� mais distante na visualiza��o
 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
-	 (*board.gameObjects[1]).setStencilMode(true);
+	(*board.gameObjects[1]).setStencilMode(true);
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[2]).setPosition(glm::vec3(0.0f, 4.0f, -20.0f));
 	(*board.gameObjects[2]).setStencilMode(true);
