@@ -13,7 +13,7 @@ bool Physics::broadPhase() // testes com sort and sweep
 	return false;
 }
 
-bool Physics::isCollision(vector<GameObject*> &objList) {
+bool Physics::isCollision(vector<GameObject*> &objList, float deltaTime) {
 	
 	//lista de todos os pares ,lista de pares provaveis fazer comparacao de xmax e xmin
 	//std::vector<Mesh> mesh1 = obj1->getModel().meshes;
@@ -95,7 +95,10 @@ bool Physics::isCollision(vector<GameObject*> &objList) {
 		//inserir cout aqui para ver os falores das flags e outras variáveis
 			//allPairs.erase(allPairs.begin() + i);
 			if (!allPairs.empty()) std::cout << "()Colidiu()" << std::endl;
-			narrowPhase(*obj1, *obj2);
+			
+			//for (int i = 0; i < 10; i++) {
+				narrowPhaseTest(*obj1, *obj2, deltaTime);
+			//}
 		} 
 
 		
@@ -159,11 +162,77 @@ bool Physics::isCollision(vector<GameObject*> &objList) {
 	return false;
 }
 
-bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
-{
-	//calcular o bounding box da mesh do player 
+bool Physics::narrowPhaseTest(GameObject &obj1, GameObject &obj2, float deltaTime) 
+{// obs: achar um response diferente
 	float planeDistance = 0;
 	float radius = 1.5f;
+	bool breakPlane = false;
+	glm::vec3 point = obj1.getPosition();
+	glm::vec3 point2 = obj2.getPosition();
+	
+	//pegar o collision box do objeto (a ser feito)
+	cout << "<<<NARROW>>>" << endl;
+
+	for (int i = 0; i < obj2.getModel().meshes.size(); i++) {
+
+		//int j = 0;
+		//while (true) {
+		int indexAux = -1;
+		glm::vec3 normalAux;
+		float distanceAux = 9999999;
+		for (int j = 0; j < obj2.getModel().meshes[i].indices.size(); j += 3) {
+
+			int index = obj2.getModel().meshes[i].indices[j];
+
+			glm::vec3 vertex1 = obj2.getModel().meshes[i].vertices[index].Position + obj2.getPosition();
+			glm::vec3 vertex2 = obj2.getModel().meshes[i].vertices[index + 1].Position + obj2.getPosition();
+			glm::vec3 vertex3 = obj2.getModel().meshes[i].vertices[index + 2].Position + obj2.getPosition();
+			glm::vec3 vertex_ab = vertex2 - vertex1;
+			glm::vec3 vertex_ac = vertex3 - vertex1;
+			glm::vec3 normal = glm::cross(vertex_ab, vertex_ac);
+			//if (normal.y < 0) continue;
+
+			/*float d = -1 * glm::dot(normal, vertex1);
+			//float div = sqrt((normal.x*normal.x) + (normal.y*normal.y) + (normal.z*normal.z));
+			float div = glm::length(normal);
+
+			planeDistance = (glm::dot(normal, point) + d) / div;
+			planeDistance = abs(planeDistance);*/
+
+			//planeDistance = glm::length(vertex1 - point);
+			planeDistance = glm::dot(glm::normalize(normal), vertex1 - point);
+
+			if ((planeDistance < radius))
+			{
+				//this->normalResponse = glm::normalize(normal);
+				breakPlane = true;
+				//obj1.Move(normalResponse, deltaTime);
+				//obj1.Move(normal, deltaTime);
+				if (planeDistance < distanceAux) {
+					distanceAux = planeDistance;
+					normalAux = normal;
+				}
+				
+			}
+
+			/*if (j >= obj2.getModel().meshes[i].indices.size() - 3)//evitar repeticao de vertice
+			{
+				break;
+			}
+			j = j + 3;*/
+		}
+		if(distanceAux < radius) obj1.Move(normalAux, deltaTime);
+		
+	}
+
+	return false;
+}
+
+bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
+{	
+	//calcular o bounding box da mesh do player 
+	float planeDistance = 0;
+	float radius = 1.0f;
 	float x_min, y_min, z_min;
 	float x_max, y_max, z_max;
 	glm::vec3 point = obj1.getPosition();
@@ -192,6 +261,7 @@ bool Physics::narrowPhase(GameObject obj1, GameObject obj2)
 			breakPlane = false;
 			inside_sphere = false;
 			int index = obj2.getModel().meshes[i].indices[j];
+			//3 vértices que definem um plano
 			glm::vec3 vertex1 = obj2.getModel().meshes[i].vertices[index].Position + obj2.getPosition();
 			glm::vec3 vertex2 = obj2.getModel().meshes[i].vertices[index+1].Position + obj2.getPosition();
 			glm::vec3 vertex3 = obj2.getModel().meshes[i].vertices[index+2].Position + obj2.getPosition();

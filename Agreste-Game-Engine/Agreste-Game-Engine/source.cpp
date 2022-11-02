@@ -102,13 +102,13 @@ int main()
 	(*board.gameObjects[0]).unfix();
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma est� mais distante na visualiza��o
 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
-	(*board.gameObjects[1]).setStencilMode(true);
+	//(*board.gameObjects[1]).setStencilMode(true);
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[2]).setPosition(glm::vec3(0.0f, 4.0f, -20.0f));
-	(*board.gameObjects[2]).setStencilMode(true);
+	//(*board.gameObjects[2]).setStencilMode(true);
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[3]).setPosition(glm::vec3(0.0f, 6.0f, -25.0f));
-	(*board.gameObjects[3]).setStencilMode(true);
+	//(*board.gameObjects[3]).setStencilMode(true);
 
 
 
@@ -148,6 +148,7 @@ int main()
 		{	// Broad Phase que vai fazer essas comparacoes (comparacoes com todos gameobjects) 
 			if (py.narrowPhase(*Player, (*board.gameObjects[i])))
 			{
+				deltaTime dá refresh por segundo ao invés de ser por frame
 				(*Player).Move(py.normalResponse, deltaTime);
 				py.isCollision(Player, board.gameObjects[i]);
 			}
@@ -155,7 +156,7 @@ int main()
 		if (board.gameObjects[0]->getPosition().x > 5.0f) {
 			cout << "AQUI" << endl;
 		}
-		py.isCollision(board.gameObjects);
+		py.isCollision(board.gameObjects, deltaTime);
 
 	//	cout << "( " << board.gameObjects[0]->getPosition().x << ", " << board.gameObjects[0]->getPosition().y << ", " << board.gameObjects[0]->getPosition().z << " )" << endl;
 
