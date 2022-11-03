@@ -100,17 +100,20 @@ int main()
 	(*board.gameObjects[0]).setPosition(glm::vec3(1.0f, 3.0f, 0.0f));
 	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 	(*board.gameObjects[0]).unfix();
-	board.addGameObject("../Agreste-Game-Engine/platform.obj");// plataforma est� mais distante na visualiza��o
+	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
 	//(*board.gameObjects[1]).setStencilMode(true);
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[2]).setPosition(glm::vec3(0.0f, 4.0f, -20.0f));
+	
 	//(*board.gameObjects[2]).setStencilMode(true);
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[3]).setPosition(glm::vec3(0.0f, 6.0f, -25.0f));
 	//(*board.gameObjects[3]).setStencilMode(true);
 
-
+	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+	(*board.gameObjects[4]).setPosition(glm::vec3(0.0f, 30.0f, -25.0f));
+	(*board.gameObjects[4]).unfix();
 
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
@@ -363,7 +366,7 @@ void movePlayer(GameBoard &board)
 		{
 			glm::vec3 direction = (*p1).getUp();
 			direction *= 5;
-			(*p1).Move(direction, deltaTime * 5);
+			(*p1).Move(direction, deltaTime*5);
 			float y = (*p1).getPosition().y + 6.5f;
 			//cout << "(" << (*p1).getPosition().x << ", " << (*p1).getPosition().y << ", " << (*p1).getPosition().z << ")" << endl;
 

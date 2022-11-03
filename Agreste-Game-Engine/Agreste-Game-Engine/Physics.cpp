@@ -95,10 +95,9 @@ bool Physics::isCollision(vector<GameObject*> &objList, float deltaTime) {
 		//inserir cout aqui para ver os falores das flags e outras variáveis
 			//allPairs.erase(allPairs.begin() + i);
 			if (!allPairs.empty()) std::cout << "()Colidiu()" << std::endl;
+				if(obj1->isFixed()) narrowPhaseTest(*obj2, *obj1, deltaTime);
+				else narrowPhaseTest(*obj1, *obj2, deltaTime);
 			
-			//for (int i = 0; i < 10; i++) {
-				narrowPhaseTest(*obj1, *obj2, deltaTime);
-			//}
 		} 
 
 		
@@ -221,7 +220,17 @@ bool Physics::narrowPhaseTest(GameObject &obj1, GameObject &obj2, float deltaTim
 			}
 			j = j + 3;*/
 		}
-		if(distanceAux < radius) obj1.Move(normalAux, deltaTime);
+		cout << "NORMAL: ";
+		cout << normalAux.x << ", "<< normalAux.y << ", " << normalAux.z;
+		if (distanceAux < radius) {
+			
+			if(!obj1.isFixed())obj1.Move(normalAux, deltaTime);
+			//if(!obj2.isFixed())obj2.Move(normalAux, deltaTime);
+
+		} 
+		if (!obj1.isFixed() && !obj2.isFixed()) {
+			obj2.Move(normalAux*(-1.0f), deltaTime);
+		}
 		
 	}
 
