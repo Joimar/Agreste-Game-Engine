@@ -46,9 +46,12 @@ int count1;
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
+
+
 // The MAIN function, from here we start the application and run the game loop
 int main()
 {
+	
 	// Init GLFW
 	glfwInit();
 	// Set all the required options for GLFW
@@ -60,6 +63,8 @@ int main()
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "AGE", nullptr, nullptr);
+
+	
 
 	if (nullptr == window)
 	{
@@ -122,9 +127,50 @@ int main()
 
 	Drawer *desenhista = desenhista->GetInstance();
 
+	//Frame counter
+	double prevTime = 0.0;
+	//double crntTime = 0.0;
+	//double timeDiff = 0.0;
+	unsigned int counter = 0;
+	static unsigned int fps_start = 0;
+	static unsigned int fps_frames = 0;
+
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
+		// Counting frames
+		/*crntTime = glfwGetTime();
+		timeDiff = crntTime - prevTime;
+		counter++;
+		if (timeDiff >= 1.0 / 30.0)
+		{
+			std::string FPS = std::to_string((1.0 / timeDiff) * counter);
+			std::string ms = std::to_string((timeDiff / counter) * 1000);
+			std::string title = "FPS Counter: " + FPS + "FPS/ " + ms + "ms";
+			glfwSetWindowTitle(window, title.c_str());
+			prevTime = crntTime;
+			counter = 0;
+		}*/
+		//_______________________________________________________________________
+
+		 // Measure speed
+		double currentTime = glfwGetTime();
+		double delta = currentTime - prevTime;
+		counter++;
+		if (delta >= 1.0) { // If last cout was more than 1 sec ago
+			cout << 1000.0 / double(counter) << endl;
+
+			double fps = double(counter) / delta;
+
+			std::stringstream ss;
+			ss << "AGE" << " "  << " [" << fps << " FPS]";
+
+			glfwSetWindowTitle(window, ss.str().c_str());
+
+			counter = 0;
+			prevTime = currentTime;
+		}
+
 		// Calculate deltatime of current frame
 		GLfloat currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
