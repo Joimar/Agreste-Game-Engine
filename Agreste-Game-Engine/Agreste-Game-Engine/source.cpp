@@ -120,6 +120,10 @@ int main()
 	(*board.gameObjects[4]).setPosition(glm::vec3(0.0f, 30.0f, -25.0f));
 	(*board.gameObjects[4]).unfix();
 
+	board.addGameObject("../Agreste-Game-Engine/images/cubeElementExemple.obj");
+	(*board.gameObjects[5]).setPosition(glm::vec3(0.0f, 40.0f, -25.0f));
+	(*board.gameObjects[5]).unfix();
+
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
 	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a c�mera no mesmo lugar do player (blue flicking)
