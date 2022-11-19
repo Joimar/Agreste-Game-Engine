@@ -124,6 +124,10 @@ int main()
 	(*board.gameObjects[5]).setPosition(glm::vec3(0.0f, 40.0f, -25.0f));
 	(*board.gameObjects[5]).unfix();
 
+	board.addGameObject("../Agreste-Game-Engine/platformUp.obj");
+	(*board.gameObjects[6]).setPosition(glm::vec3(0.0f, 11.0f, -30.0f));
+	//(*board.gameObjects[6]).unfix();
+
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
 	(*cam).setPosition(glm::vec3(0.0f, 0.0f, 0.0f)); // setando a c�mera no mesmo lugar do player (blue flicking)
@@ -190,13 +194,25 @@ int main()
 		board.thirdPersonCamera((*board.gameObjects[0]), board.distance_from_camera_to_player);
 		
 		//TESTE
+		
 		//board.drawGameObjects();//se n�o tiver game objects ele desenha o skybox sozinho
 		Cubemap skycube = board.getSkyCube();
 		desenhista->drawScene(board, skycube);
+		
+		//______Rotation obj
+		//glRotatef(90, 1, 0, 0);
+		//glRotated(90, 1, 0, 0);
+		//desenhista->draw(*board.gameObjects[1], board);
+		
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		movePlayer(board);
 
+		if (board.gameObjects[5]->getPosition().y < 3) 
+		{
+			cout << "##########################################################################" << endl;
+			board.gameObjects[3]->setStencilMode(true);
+		}
 		/*for (int i = 0; i < board.gameObjects.size(); i++)
 		{	// Broad Phase que vai fazer essas comparacoes (comparacoes com todos gameobjects) 
 			if (py.narrowPhase(*Player, (*board.gameObjects[i])))
