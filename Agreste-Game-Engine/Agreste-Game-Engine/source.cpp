@@ -124,9 +124,8 @@ int main()
 	(*board.gameObjects[5]).setPosition(glm::vec3(0.0f, 40.0f, -25.0f));
 	(*board.gameObjects[5]).unfix();
 
-	board.addGameObject("../Agreste-Game-Engine/platformUp.obj");
+	board.addGameObject("../Agreste-Game-Engine/images/platformUp.obj");
 	(*board.gameObjects[6]).setPosition(glm::vec3(0.0f, 11.0f, -30.0f));
-	//(*board.gameObjects[6]).unfix();
 
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
