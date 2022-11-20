@@ -121,11 +121,16 @@ int main()
 	(*board.gameObjects[4]).unfix();
 
 	board.addGameObject("../Agreste-Game-Engine/images/cubeElementExemple.obj");
-	(*board.gameObjects[5]).setPosition(glm::vec3(0.0f, 40.0f, -25.0f));
+	(*board.gameObjects[5]).setPosition(glm::vec3(-3.0f, 40.0f, -25.0f));
 	(*board.gameObjects[5]).unfix();
-
+	
 	board.addGameObject("../Agreste-Game-Engine/images/platformUp.obj");
 	(*board.gameObjects[6]).setPosition(glm::vec3(0.0f, 11.0f, -30.0f));
+	(*board.gameObjects[6]).setRawColor(glm::vec4(1, 0, 0, 1));
+
+	board.addGameObject("../Agreste-Game-Engine/images/cubeElementExemple2.obj");
+	(*board.gameObjects[7]).setPosition(glm::vec3(3.0f, 40.0f, -25.0f));
+	(*board.gameObjects[7]).unfix();
 
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
@@ -210,7 +215,12 @@ int main()
 		if (board.gameObjects[5]->getPosition().y < 3) 
 		{
 			cout << "##########################################################################" << endl;
-			board.gameObjects[3]->setStencilMode(true);
+			(*board.gameObjects[6]).setRawColor(glm::vec4(0, 1, 0, 1));
+			board.gameObjects[6]->setStencilMode(true);
+		}
+		else if (board.gameObjects[7]->getPosition().y < 3) 
+		{
+			board.gameObjects[6]->setStencilMode(true);
 		}
 		/*for (int i = 0; i < board.gameObjects.size(); i++)
 		{	// Broad Phase que vai fazer essas comparacoes (comparacoes com todos gameobjects) 
