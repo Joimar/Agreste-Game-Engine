@@ -215,11 +215,12 @@ int main()
 		if (board.gameObjects[5]->getPosition().y < 3) 
 		{
 			cout << "##########################################################################" << endl;
-			(*board.gameObjects[6]).setRawColor(glm::vec4(0, 1, 0, 1));
+			
 			board.gameObjects[6]->setStencilMode(true);
 		}
 		else if (board.gameObjects[7]->getPosition().y < 3) 
 		{
+			(*board.gameObjects[6]).setRawColor(glm::vec4(0, 1, 0, 1));
 			board.gameObjects[6]->setStencilMode(true);
 		}
 		/*for (int i = 0; i < board.gameObjects.size(); i++)
