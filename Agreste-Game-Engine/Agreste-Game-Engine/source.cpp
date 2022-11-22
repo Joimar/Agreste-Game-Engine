@@ -105,7 +105,41 @@ int main()
 	(*board.gameObjects[0]).setPosition(glm::vec3(1.0f, 3.0f, 0.0f));
 	(*board.gameObjects[0]).setRawColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 	(*board.gameObjects[0]).unfix();
-	board.addGameObject("../Agreste-Game-Engine/platform.obj");
+
+	float auxY = 2.0f;
+	float auxZ = -15.0f;
+	int aux = 0;
+	for (int i = 0; i < 5; i++) 
+	{
+		board.addGameObject("../Agreste-Game-Engine/platform.obj");
+		(*board.gameObjects[aux]).setPosition(glm::vec3(0.0f, auxY, auxZ));
+		//(*board.gameObjects[1]).setStencilMode(true);
+		board.addGameObject("../Agreste-Game-Engine/platform.obj");
+		(*board.gameObjects[aux + 1]).setPosition(glm::vec3(0.0f, auxY + 2.0f, auxZ - 5.0f));
+
+		//(*board.gameObjects[2]).setStencilMode(true);
+		board.addGameObject("../Agreste-Game-Engine/platform.obj");
+		(*board.gameObjects[aux + 2]).setPosition(glm::vec3(0.0f,auxY + 4.0f, auxZ - 10.0f));
+		//(*board.gameObjects[3]).setStencilMode(true);
+
+		//Blocos que caem
+		board.addGameObject("../Agreste-Game-Engine/platform.obj");
+		(*board.gameObjects[aux + 3]).setPosition(glm::vec3(0.0f, auxY + 10.0f, auxZ));
+		(*board.gameObjects[aux + 3]).unfix();
+
+		board.addGameObject("../Agreste-Game-Engine/platform.obj");
+		(*board.gameObjects[aux + 4]).setPosition(glm::vec3(0.0f, auxY + 15.0f, auxZ - 5.0f));
+		(*board.gameObjects[aux + 4]).unfix();
+
+		board.addGameObject("../Agreste-Game-Engine/platform.obj");
+		(*board.gameObjects[aux + 5]).setPosition(glm::vec3(0.0f, auxY + 20.0f, auxZ - 10.0f));
+		(*board.gameObjects[aux + 5]).unfix();
+		aux += 6;
+		auxY += 23.0f;
+		auxZ += 20.0f;
+	}
+
+	/*board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[1]).setPosition(glm::vec3(0.0f, 2.0f, -15.0f));
 	//(*board.gameObjects[1]).setStencilMode(true);
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
@@ -118,7 +152,7 @@ int main()
 
 	board.addGameObject("../Agreste-Game-Engine/platform.obj");
 	(*board.gameObjects[4]).setPosition(glm::vec3(0.0f, 30.0f, -25.0f));
-	(*board.gameObjects[4]).unfix();
+	(*board.gameObjects[4]).unfix(); */
 
 	GameObject * Player = board.gameObjects[0];
 	Camera * cam = board.getCamera();
